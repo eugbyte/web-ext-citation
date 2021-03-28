@@ -7,9 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "web-ext --source-dir build run",
-    "dev-watch": "web-ext --source-dir src/static run",
-    "build:css": "postcss src/static/tailwind.css -o src/static/style.css",
-    "watch:css": "postcss src/static/tailwind.css -o src/static/style.css"
+    "dev-watch": "web-ext --source-dir src/static run"
   },
   "author": "",
   "license": "ISC",

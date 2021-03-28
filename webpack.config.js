@@ -38,10 +38,15 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css'
   }),
-    new HtmlWebpackPlugin({ template: './src/index.html' }), 
+    new HtmlWebpackPlugin({ template: './src/asset/index.html' }), 
     new CopyWebpackPlugin({
       patterns: [
-          { from: 'src/static' }
+          { 
+            from: 'src/asset',
+            globOptions: {
+              ignore: ["**/asset/index.html"]
+            } 
+          }          
       ]
     })
   ]
