@@ -1,6 +1,6 @@
 # web-ext-citation
 
-## Folder structure
+## Folder structure and webpack
 ### src/asset
 Folder structure containing the components making up the background page for the web extension.  
 Contains `manifest.json`.  
@@ -20,7 +20,13 @@ Contains all the content scripts.
 Tailwind is used for CSS.  
 
 ### webpack
-The background-scripts, content-scripts, and `index.tsx` (react) are prevented from being compiled into a single `.js` file by specifying multiple entry points and multiple output files.  
+The background-scripts, content-scripts, and `index.tsx` (react) are prevented from being compiled into a single `.js` file by specifying multiple entry points and multiple output files. 
+
+Webpack by itself only targets .js files, and produces .js files.  
+  
+When compilation occurs, the manifest.json files and icons are preserved and copied over  through the `CopyWebpackPlugin`.
+  
 To configure Tailwind with webpack, `MiniCssExtractPlugin.loader`, `css-loader`, `postcss-loader` are needed.  
 `postcss-loader` process Tailwind syntax into pure css.
 `MiniCssExtractPlugin.loader` extracts CSS into separate files instead of compiling the css into js.
+  
