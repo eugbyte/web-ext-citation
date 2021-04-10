@@ -1,41 +1,35 @@
-export function traverseUp (targetElement: HTMLElement, copiedText: string, provisions: string[] = [], iteration = 1) {
-    const regex = /\d+\.—\(\d+\)|\n\(\.+\)/ ;
+export function processElement (targetElement: HTMLElement, copiedText: string, iteration = 1) {
 
-    const parent = targetElement.parentElement as HTMLElement;
-    if (!assertElementType(targetElement, "DIV")) {
+    console.log("copiedText:\n", copiedText);
 
-        traverseUp(parent, copiedText, provisions, iteration+1);
+    const parentElement: HTMLElement = traverseUp(targetElement, "DIV");
+    const fullText: string = parentElement.innerText;
+    console.log("fullText:\n", fullText);
 
-        const prevSibling = targetElement.previousElementSibling as HTMLElement;
-        if (prevSibling && assertElementType(prevSibling, "TD")) {
-            let provision: string = prevSibling.innerText;
-            provisions.unshift(provision);
-            console.log(targetElement.innerText + "\n", provision + "\n",  prevSibling.innerText);
-        }
-
-        if (prevSibling == null && assertElementType(targetElement, "TD")) {
-            let matches: RegExpMatchArray | null = targetElement.innerText.match(regex);
-            if (matches == null) return;
-
-            let provision: string = matches[0];
-            provisions.unshift(provision);
-            console.log("prevSibling is null\n", provision + "\n", targetElement.innerText);
-        }
-
-        return;
-    } 
-
-    console.log(provisions);
-
-    const innerText: string = parent.innerText;
-    console.log("FOUND: " + innerText.includes(copiedText));
-
-    const startIndex: number = innerText.indexOf(copiedText);
-    const endIndex: number = startIndex + copiedText.length;
-    console.log(startIndex, endIndex);        
+    const regex = /\d+\.—\(\d+\)|\n\(\w+\)/g ;
+    const copiedTextMatches = findMatches(regex, copiedText);
+    console.log(copiedTextMatches)
+    console.log("-----");
+    const parentTextMatches = findMatches(regex, fullText);    
+    console.log(parentTextMatches);
 }
 
-// An element is a container if it contains the entire section of the statute, as opposed to the sub section 
-function assertElementType(element: HTMLElement, matcher: string) {
-    return element.nodeName === matcher;
+
+
+function traverseUp(element: HTMLElement, nodeName: string): HTMLElement {
+    if (!(element.nodeName === nodeName)) {
+        return traverseUp(element.parentElement as HTMLElement, nodeName);        
+    } 
+    return element;
+}
+
+function findMatches(regex: RegExp, text: string) {
+    const matches = [...text.matchAll(regex)];
+    return matches.map((matchArray: RegExpMatchArray) => {
+        if (matchArray.length > 1) throw new Error("regex should not contain more than one match as there are no optionals");
+        return {
+            index: matchArray.index,
+            provision: matchArray[0]
+        }
+    }); 
 }
