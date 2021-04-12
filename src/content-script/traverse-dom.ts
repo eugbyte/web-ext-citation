@@ -34,6 +34,7 @@ export function processElement (targetElement: HTMLElement, copiedText: string, 
     
     // sort the provisonComponent array by descending order
     provisions = sortProvComponents(provisions);
+    provisions.reverse();
     console.log("after sort", provisions);
 
     for (const prov of provisions) {
@@ -69,7 +70,7 @@ function splitFirstProvisionComponent(originalFirstComponent: ProvisionComponent
 function getStartIndexOfCopiedText(targetElement: HTMLElement, parentFullText: string): number {
     const childFullText: string = targetElement.innerText;
     const occurences = parentFullText.split(childFullText).length;
-    if (occurences > 1) {
+    if (occurences > 2) {
         console.log("Unable to process more than one matches")
         //throw new Error("Unable to process more than one matches");
     }
