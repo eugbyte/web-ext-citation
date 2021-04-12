@@ -6,9 +6,9 @@ document.addEventListener('copy', (event: ClipboardEvent) => {
     if (!copiedText) return;
     processElement(targetElement, copiedText as string);
 
-    //(event.clipboardData as DataTransfer).setData('text/plain', modifiedText);
+    (event.clipboardData as DataTransfer).setData('text/plain', copiedText);
     //(event.clipboardData as DataTransfer).setData('text/html', copiedText + '<b>Source:</b> <a href="' + document.location.href + '">' + document.title + '</a>');
-    (event.clipboardData as DataTransfer).setData('application/xml', `<footnote>Hello</footnote>`);
+    //(event.clipboardData as DataTransfer).setData('application/xml', `<footnote>Hello</footnote>`);
     event.preventDefault();
 });
 
