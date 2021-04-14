@@ -62,7 +62,7 @@ export function processElement (targetElement: HTMLElement) {
 
         // prevProvResult isRoman, add the next prov that is alpha
         // e.g. (i), next prov should be (a)
-        // need to cater for e.g. 15(i), by checking with 
+        // need to cater for e.g. 15(i), by checking for Roman first before Alpha
         if (isRoman(prevProv)) {
             console.log("prevProv isRoman");
             if (isAlpha(text)) {
@@ -74,6 +74,12 @@ export function processElement (targetElement: HTMLElement) {
         // e.g. (a), next prov should be 15
         if (isAlpha(prevProv)) {
             console.log("prevProv isAlpha")
+            if (isBracketedNumber(text)) {
+                provResult.unshift(text);
+            }
+        }
+
+        if (isBracketedNumber(prevProv)) {
             if (isNumber(text)) {
                 provResult.unshift(text);
             }
@@ -83,6 +89,7 @@ export function processElement (targetElement: HTMLElement) {
         // Only the first component of the provision is a number, e.g. 15 (a)(i)
         const isFirstProvComponent: boolean = isNumber(prevProv);
         if (isFirstProvComponent) {
+            console.log("break", prevProv);
             break;
         }
 
@@ -98,9 +105,14 @@ function isAlpha(str: string): boolean {
     return /\([A-Z]+\)/i.test(str);
 }
 
+// E.g. (i), (iv)
 function isRoman(str: string): boolean {
     const regex = /^\((M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))\)$/i
     return regex.test(str);
+}
+
+function isBracketedNumber(str: string): boolean {
+    return /\(\d+\)/.test(str);
 }
 
 function isNumber(str: string): boolean {
