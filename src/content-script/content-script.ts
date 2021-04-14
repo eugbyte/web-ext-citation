@@ -4,7 +4,7 @@ document.addEventListener('copy', (event: ClipboardEvent) => {
     const copiedText: string | undefined = document.getSelection()?.toString();
     const targetElement = event.target as HTMLElement;
     if (!copiedText) return;
-    processElement(targetElement, copiedText as string);
+    processElement(targetElement);
 
     (event.clipboardData as DataTransfer).setData('text/plain', copiedText);
     //(event.clipboardData as DataTransfer).setData('text/html', copiedText + '<b>Source:</b> <a href="' + document.location.href + '">' + document.title + '</a>');
