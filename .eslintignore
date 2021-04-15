@@ -7,3 +7,5 @@ webpack.config.js
 .dynamodb
 build
 asset
+postcss.config.js
+tailwind.config.js
