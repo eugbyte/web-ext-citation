@@ -1,19 +1,19 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin'); 
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
-  mode: "development",
+  mode: 'development',
   entry: {
-      "content-script": "./src/content-script/content-script.ts",
-      "background-script": "./src/background-script/background-script.ts",
-      "index": "./src/index.tsx"
+    'content-script': './src/content-script/content-script.ts',
+    'background-script': './src/background-script/background-script.ts',
+    index: './src/index.tsx'
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build')
   },
   devtool: 'inline-source-map',
   module: {
@@ -21,33 +21,33 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: ['ts-loader'],
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.css$/i,
         sideEffects: true,
-        use: [ MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
-      },
-    ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
+      }
+    ]
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     plugins: [new TsconfigPathsPlugin()]
-  },  
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css'
-  }),
-    new HtmlWebpackPlugin({ template: './src/asset/index.html' }), 
+    }),
+    new HtmlWebpackPlugin({ template: './src/asset/index.html' }),
     new CopyWebpackPlugin({
       patterns: [
-          { 
-            from: 'src/asset',
-            globOptions: {
-              ignore: ["**/asset/index.html"]
-            } 
-          }          
+        {
+          from: 'src/asset',
+          globOptions: {
+            ignore: ['**/asset/index.html']
+          }
+        }
       ]
     })
   ]
-};
+}
