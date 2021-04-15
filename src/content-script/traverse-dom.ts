@@ -2,7 +2,6 @@ import cloneDeep from "lodash.clonedeep";
 
 class ProvisionComponent {
     constructor(public index: number, public text: string) {}
-
     toString() {
         return `{ index: ${this.index}}, text: ${this.text} }`
     }
@@ -19,7 +18,6 @@ export function processElement (targetElement: HTMLElement) {
 
     const matches: RegExpMatchArray[] = findMatches(regex, parentFullText);
     let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
-    console.log(provisions);
 
     // Need to seperate 15.—(1) into 15. and (1)
     const originalFirstComponent = provisions.shift() as ProvisionComponent;
@@ -29,33 +27,28 @@ export function processElement (targetElement: HTMLElement) {
     // In case user copies the more than one provision, including the provision number
     const startIndex: number = getStartIndexOfCopiedText(targetElement, parentFullText);
     const endIndex: number = startIndex + targetElement.innerText.length;
-    console.log(startIndex, endIndex);
     provisions.push(new ProvisionComponent(endIndex, "<EOS>")); // end of sentence token
     
     // sort the provisonComponent array by descending order
     provisions = sortProvComponentsByDescending(provisions);
-    console.log("after sort", provisions);
+    console.log(provisions);
 
     // Add the provision components to the start of the array
     // e.g. (i) -> (a) -> 15
     const provResult: string[] = [];
 
     for (const prov of provisions) {
-        if (prov.index >= endIndex) {
-            console.log(`${prov} skipped`);
-            continue;
-        } 
+        if (prov.index >= endIndex) continue;
+
         const text = prov.text.replace(/(\r\n|\n|\r)/g, "");
 
         // The first prov component after the EOS is added
         if (provResult.length === 0) {
             provResult.push(text);
-            console.log(`prov closest to EOS ${prov.toString()}`)
             continue;
         }
 
         const prevProv: string = provResult[0];
-        console.log(`prevProv: ${prevProv}`)
 
         // e.g. 15(a)(i)
         // isNumber, isAlpha, isRomanNumeral
@@ -63,41 +56,22 @@ export function processElement (targetElement: HTMLElement) {
         // prevProvResult isRoman, add the next prov that is alpha
         // e.g. (i), next prov should be (a)
         // need to cater for e.g. 15(i), by checking for Roman first before Alpha
-        if (isRoman(prevProv)) {
-            console.log("prevProv isRoman");
-            if (isAlpha(text)) {
-                provResult.unshift(text);
-            }
-        }
+        if (isRoman(prevProv) && isAlpha(text) && text !== "(i)") provResult.unshift(text);
         
         // prevProvResult isAlpha, add the next prov that is a number
         // e.g. (a), next prov should be 15
-        if (isAlpha(prevProv)) {
-            console.log("prevProv isAlpha")
-            if (isBracketedNumber(text)) {
-                provResult.unshift(text);
-            }
-        }
+        if (isAlpha(prevProv) && isBracketedNumber(text)) provResult.unshift(text);
 
-        if (isBracketedNumber(prevProv)) {
-            if (isNumber(text)) {
-                provResult.unshift(text);
-            }
-        }
+        if (isBracketedNumber(prevProv) && isNumber(text)) provResult.unshift(text);
         
         // prevResult isNumber
         // Only the first component of the provision is a number, e.g. 15 (a)(i)
         const isFirstProvComponent: boolean = isNumber(prevProv);
-        if (isFirstProvComponent) {
-            console.log("break", prevProv);
-            break;
-        }
+        if (isFirstProvComponent) break;
 
     }
 
-    console.log("result", provResult);
-
-    
+    console.log("result", provResult);    
 }
 
 // E.g. (a)
