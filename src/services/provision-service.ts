@@ -21,11 +21,24 @@ export class ProvisionService implements ProvisionImpl {
 
   // Need to seperate 15.—(1) into 15. and (1)
   splitFirstProvisionComponent (originalFirstComponent: ProvisionComponent): ProvisionComponent[] {
-    const [firstProvText, secondProvText] = originalFirstComponent.text.split('.—');
     const secondProvIndex = originalFirstComponent.index + originalFirstComponent.text.length;
-    return [
-      new ProvisionComponent(originalFirstComponent.index, firstProvText),
-      new ProvisionComponent(secondProvIndex, `\n${secondProvText}`)
-    ];
+
+    if (originalFirstComponent.text.includes('.—')) {
+      const [firstProvText, secondProvText] = originalFirstComponent.text.split('.—');
+      return [
+        new ProvisionComponent(originalFirstComponent.index, firstProvText),
+        new ProvisionComponent(secondProvIndex, `\n${secondProvText}`)
+      ];
+    } 
+
+    if ( (/\d+\./).test(originalFirstComponent.text)) {
+      const newFirstComponentText = originalFirstComponent.text.replace(".", "");
+      return [
+        new ProvisionComponent(originalFirstComponent.index, newFirstComponentText),
+        new ProvisionComponent(secondProvIndex, "\n(-1)")
+      ];
+    }
+    throw new Error("The first provision component did not contain either '.—' or . ");
   }
+
 }

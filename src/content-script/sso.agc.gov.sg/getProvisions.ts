@@ -6,18 +6,26 @@ export function getProvisions (targetElement: HTMLElement): string {
     const domService: DOMImpl = new DOMService();
     const regexService: RegexImpl = new RegexService();
     const provService: ProvisionImpl = new ProvisionService();
+
+    console.log("targetElement.innerText", targetElement.innerText);
   
     const parentElement: HTMLElement = domService.traverseUpToElement(targetElement, 'DIV');
-    const parentFullText: string = parentElement.innerText;
+    let parentFullText: string = parentElement.innerText;
+
+    // some provisions are 13., 14.—(1) 
+    console.log("parentFullText", "\n", parentFullText);
   
-    // E.g. 15.—(1) or (a)
-    const regex = /\d+\w?\.—\(\d+\)|\n\(\w+\)/g;
+    // E.g. 15.—(1) or 15. or (a)
+    const regex = /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
   
     const matches: RegExpMatchArray[] = regexService.findMatches(regex, parentFullText);
     let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
+    console.log("provisions", "\n", provisions[0]);
   
-    // Need to seperate 15.—(1) into 15. and (1)
     const originalFirstComponent = provisions.shift() as ProvisionComponent;
+
+    // Need to seperate 15.—(1) into 15 and (1)
+    // Need to separate 15. into 15
     const [newFirstComponent, newSecondComponent] = provService.splitFirstProvisionComponent(originalFirstComponent);
     provisions.unshift(...[newFirstComponent, newSecondComponent]);
   

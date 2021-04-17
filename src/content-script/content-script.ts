@@ -1,8 +1,12 @@
+import { cloneDeep } from "lodash";
 import { getCitation } from "./sso.agc.gov.sg";
 
 document.addEventListener('copy', (event: ClipboardEvent) => {
   const copiedText: string | undefined = document.getSelection()?.toString();
-  const targetElement = event.target as HTMLElement;
+  let targetElement = event.target as HTMLElement;
+  targetElement = cloneDeep(targetElement);
+  
+  console.log(targetElement);
   if (!copiedText) return;
   const provision: string = getCitation(targetElement);
   console.log(provision);

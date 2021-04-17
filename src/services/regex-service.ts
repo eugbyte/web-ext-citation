@@ -4,6 +4,8 @@ export interface RegexImpl {
     isBracketedRoman (str: string): boolean;
     isBracketedNumber (str: string): boolean;
     isNumber (str: string): boolean;
+    titleCase (str: string): string;
+    replaceMultiLineBreakWithSingleLineBreak(str: string): string;
 }
 
 export class RegexService implements RegexImpl {
@@ -25,10 +27,18 @@ export class RegexService implements RegexImpl {
 
   // E.g. (2)
   isBracketedNumber (str: string): boolean {
-    return /\(\d+\)/.test(str);
+    return /\(-?\d+\)/.test(str);
   }
 
   isNumber (str: string): boolean {
-    return /^\d+$/.test(str);
+    return /^-?\d+$/.test(str);
+  }
+  
+  titleCase (str: string): string {
+    return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase() });
+  }
+
+  replaceMultiLineBreakWithSingleLineBreak(str: string): string {
+    return str.replace(/\n+/g, "\n");
   }
 }
