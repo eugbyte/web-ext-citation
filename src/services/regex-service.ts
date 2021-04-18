@@ -6,6 +6,7 @@ export interface RegexImpl {
     isNumber (str: string): boolean;
     titleCase (str: string): string;
     replaceMultiLineBreakWithSingleLineBreak(str: string): string;
+    getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number;
 }
 
 export class RegexService implements RegexImpl {
@@ -40,5 +41,14 @@ export class RegexService implements RegexImpl {
 
   replaceMultiLineBreakWithSingleLineBreak(str: string): string {
     return str.replace(/\n+/g, "\n");
+  }
+
+  getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
+    const occurences = parentFullText.split(childFullText).length;
+    if (occurences > 2) {
+      console.log('Unable to process more than one matches');
+      throw new Error('Unable to process more than one matches');
+    }
+    return parentFullText.indexOf(childFullText);
   }
 }

@@ -1,14 +1,9 @@
-import { DOMImpl, DOMService } from "src/services/dom-service";
 import { ProvisionImpl, ProvisionService, ProvisionComponent } from "src/services/provision-service";
 import { RegexImpl, RegexService } from "src/services/regex-service";
 
-export function getProvisions (targetElement: HTMLElement): string {
-    const domService: DOMImpl = new DOMService();
-    const regexService: RegexImpl = new RegexService();
-    const provService: ProvisionImpl = new ProvisionService();
-  
-    const parentElement: HTMLElement = domService.traverseUpToElement(targetElement, 'DIV');
-    const parentFullText: string = parentElement.innerText;
+export function getProvisions (sectionText: string, parentFullText: string): string {
+  const regexService: RegexImpl = new RegexService(); 
+  const provService: ProvisionImpl = new ProvisionService();
 
     // E.g. 15.—(1) or 15. or (a)
     const regex = /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
@@ -19,13 +14,13 @@ export function getProvisions (targetElement: HTMLElement): string {
     const originalFirstComponent = provisions.shift() as ProvisionComponent;
 
     // Need to seperate 15.—(1) into 15 and (1)
-    // Need to separate 15. into 15
+    // Need to separate 15. into 15 and (-1). Need -1 as the rules for completing a provision assumes a bracketed number, e.g. 15(2)
     const [newFirstComponent, newSecondComponent] = provService.splitFirstProvisionComponent(originalFirstComponent);
     provisions.unshift(...[newFirstComponent, newSecondComponent]);
   
     // In case user copies the more than one provision, including the provision number
-    const startIndex: number = domService.getStartIndexOfCopiedText(targetElement.innerText, parentFullText);
-    const endIndex: number = startIndex + targetElement.innerText.length;
+    const startIndex: number = regexService.getStartIndexOfCopiedText(sectionText, parentFullText);
+    const endIndex: number = startIndex + sectionText.length - 1;
     provisions.push(new ProvisionComponent(endIndex, '<EOS>')); // end of sentence token
   
     // sort the provisonComponent array by descending order
@@ -71,6 +66,7 @@ export function getProvisions (targetElement: HTMLElement): string {
     }
 
     provResult = provResult.filter(prov => prov !== "(-1)");
+    console.log(provResult);
   
     return provResult.join('');
   }

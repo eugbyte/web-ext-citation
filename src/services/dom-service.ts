@@ -1,16 +1,17 @@
 export interface DOMImpl {
-  getStartIndexOfCopiedText (targetElement: string, parentFullText: string): number;
   traverseUpToElement (element: HTMLElement, nodeName: string, iteration?: number): HTMLElement;
+  copyNodeWithParentRef(node: HTMLElement): HTMLElement;
 }
 
 export class DOMService implements DOMImpl {
-  getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
-    const occurences = parentFullText.split(childFullText).length;
-    if (occurences > 2) {
-      console.log('Unable to process more than one matches');
-      throw new Error('Unable to process more than one matches');
-    }
-    return parentFullText.indexOf(childFullText);
+  copyNodeWithParentRef(targetElement: HTMLElement): HTMLElement {
+    const cloneTarget = targetElement.cloneNode(true) as HTMLElement;
+    cloneTarget.id = "clone";
+    cloneTarget.style.display = "none";
+
+    const parentElement = targetElement.parentElement as HTMLElement;
+    parentElement.appendChild(cloneTarget);
+    return cloneTarget;
   }
 
   traverseUpToElement (element: HTMLElement, nodeName: string, iteration = 1): HTMLElement {
@@ -19,4 +20,8 @@ export class DOMService implements DOMImpl {
     }
     return element;
   }
+
+  
+
+
 }

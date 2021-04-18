@@ -1,30 +1,49 @@
-import { getChapter } from "./getChapter";
+import { DOMImpl, DOMService } from "src/services/dom-service";
 import { getProvisions } from "./getProvisions";
 
 export function getCitation(targetElement: HTMLElement): string {
+  const domService: DOMImpl = new DOMService();
 
-  const parentElement = targetElement.parentElement as HTMLElement;
-  const cloneTarget = targetElement.cloneNode(true) as HTMLElement;
-  cloneTarget.id = "clone";
-  cloneTarget.style.display = "none";
-  parentElement.appendChild(cloneTarget);
+  // Clone the target element so that the actual DOM is not affected
+  const cloneTarget: HTMLElement = domService.copyNodeWithParentRef(targetElement);
 
-  // For some reason, for the first provisions, e.g. 14(1), 15(1), 15. 
-  // The target element bubbles from the parent element instead of from the textNode 
+  // The idea here is to 
+  /*
+  1. Extract the entire full provision
+  2. Get the start and end indexes of the section which the copy event bubbled from
+     Cannot just use copied text as may be multiple occurences
+  3. With the end index, use regex to extract the provisions, e.g. (1)(a)(ii)
+  */
+
+  // Get the full provision text
+  /*
+  <div>
+    <span>text</span>
+    <span>text copiedText text</span>   // sectionText = text + copiedText + text
+    ...
+  </div>
+  fullText = text\n + text + copiedText + text
+  */
+  const rootElement: HTMLElement = domService.traverseUpToElement(cloneTarget, "DIV");
+  const fullText: string = rootElement.innerText;
+
+  // For some reason, for the first provisions, e.g. 14(1), 15(1), 15. ,
+  // on copy, the target element bubbles from the parent element instead of from the textNode 
   /* e.g. bubble from div instead of textNode
     <div>
-      <textNode>Desired text</textNode>
+      <textNode>desired copied text</textNode>
       <table>unwanted text</table>
     </div>
   */
-  // That means the inner text will contain text from the table
-  const table = cloneTarget.querySelector("table") as HTMLTableElement;
-  if (table) cloneTarget.removeChild(table);
-  
-  const provision = getProvisions(cloneTarget);
-  parentElement.removeChild(cloneTarget);
+  // That means the inner text will contain unwanted additional text from the table
+  const table: HTMLTableElement | null = cloneTarget.querySelector("table");
+  if (table != null) cloneTarget.removeChild(table);
 
-  getChapter();
+  // The full text of the sub section which the user copied
+  const sectionText: string = cloneTarget.innerText;
+  const provision: string = getProvisions(sectionText, fullText);
+
+  (cloneTarget.parentElement as HTMLElement).removeChild(cloneTarget);
 
   return provision;
 }
