@@ -9,21 +9,18 @@ export function getCitation(targetElement: HTMLElement): string {
   cloneTarget.style.display = "none";
   parentElement.appendChild(cloneTarget);
 
-  // For some reason, for certain provisions, the target element bubbles from the parent element instead of from the textNode 
-  /* e.g. 
+  // For some reason, for the first provisions, e.g. 14(1), 15(1), 15. 
+  // The target element bubbles from the parent element instead of from the textNode 
+  /* e.g. bubble from div instead of textNode
     <div>
       <textNode>Desired text</textNode>
       <table>unwanted text</table>
     </div>
   */
-  // That means the inner text iwll contain text from the table
-  try {
-    const table = cloneTarget.querySelector("table") as HTMLTableElement;
-    cloneTarget.removeChild(table);
-  } catch (error) {
-    console.log(error);
-  }
-
+  // That means the inner text will contain text from the table
+  const table = cloneTarget.querySelector("table") as HTMLTableElement;
+  if (table) cloneTarget.removeChild(table);
+  
   const provision = getProvisions(cloneTarget);
   parentElement.removeChild(cloneTarget);
 
