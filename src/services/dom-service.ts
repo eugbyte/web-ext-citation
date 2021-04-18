@@ -1,10 +1,10 @@
 export interface DOMImpl {
   traverseUpToElement (element: HTMLElement, nodeName: string, iteration?: number): HTMLElement;
-  copyNodeWithParentRef(node: HTMLElement): HTMLElement;
+  duplicateNodeWithParentRef(node: HTMLElement): HTMLElement;
 }
 
 export class DOMService implements DOMImpl {
-  copyNodeWithParentRef(targetElement: HTMLElement): HTMLElement {
+  duplicateNodeWithParentRef(targetElement: HTMLElement): HTMLElement {
     const cloneTarget = targetElement.cloneNode(true) as HTMLElement;
     cloneTarget.id = "clone";
     cloneTarget.style.display = "none";

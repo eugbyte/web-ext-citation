@@ -6,6 +6,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   mode: 'development',
+  watchOptions: {
+    ignored: /node_modules/,
+  },
   entry: {
     'content-script': './src/content-script/content-script.ts',
     'background-script': './src/background-script/background-script.ts',

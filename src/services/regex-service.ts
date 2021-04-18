@@ -5,7 +5,7 @@ export interface RegexImpl {
     isBracketedNumber (str: string): boolean;
     isNumber (str: string): boolean;
     titleCase (str: string): string;
-    replaceMultiLineBreakWithSingleLineBreak(str: string): string;
+    removeLineBreaks(str: string): string;
     getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number;
 }
 
@@ -39,8 +39,8 @@ export class RegexService implements RegexImpl {
     return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); });
   }
 
-  replaceMultiLineBreakWithSingleLineBreak(str: string): string {
-    return str.replace(/\n+/g, "\n");
+  removeLineBreaks(str: string): string {
+    return str.replace(/\n+/g, "");
   }
 
   getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {

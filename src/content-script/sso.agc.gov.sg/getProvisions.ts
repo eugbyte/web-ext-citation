@@ -10,11 +10,10 @@ export function getProvisions (sectionText: string, parentFullText: string): str
   
     const matches: RegExpMatchArray[] = regexService.findMatches(regex, parentFullText);
     let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
-  
-    const originalFirstComponent = provisions.shift() as ProvisionComponent;
 
     // Need to seperate 15.—(1) into 15 and (1)
     // Need to separate 15. into 15 and (-1). Need -1 as the rules for completing a provision assumes a bracketed number, e.g. 15(2)
+    const originalFirstComponent = provisions.shift() as ProvisionComponent;
     const [newFirstComponent, newSecondComponent] = provService.splitFirstProvisionComponent(originalFirstComponent);
     provisions.unshift(...[newFirstComponent, newSecondComponent]);
   
@@ -66,7 +65,5 @@ export function getProvisions (sectionText: string, parentFullText: string): str
     }
 
     provResult = provResult.filter(prov => prov !== "(-1)");
-    console.log(provResult);
-  
     return provResult.join('');
   }
