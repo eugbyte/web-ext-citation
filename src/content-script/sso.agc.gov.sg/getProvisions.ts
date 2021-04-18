@@ -6,24 +6,15 @@ export function getProvisions (targetElement: HTMLElement): string {
     const domService: DOMImpl = new DOMService();
     const regexService: RegexImpl = new RegexService();
     const provService: ProvisionImpl = new ProvisionService();
-
-    console.log("Hello");
-
-    console.log("targetElement.innerText", "\n", targetElement.innerText);
   
     const parentElement: HTMLElement = domService.traverseUpToElement(targetElement, 'DIV');
-    console.log("here");
     const parentFullText: string = parentElement.innerText;
 
-    // some provisions are 13., 14.—(1) 
-    console.log("parentFullText", "\n", parentFullText);
-  
     // E.g. 15.—(1) or 15. or (a)
     const regex = /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
   
     const matches: RegExpMatchArray[] = regexService.findMatches(regex, parentFullText);
     let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
-    console.log("provisions", "\n", provisions[0]);
   
     const originalFirstComponent = provisions.shift() as ProvisionComponent;
 
@@ -33,7 +24,7 @@ export function getProvisions (targetElement: HTMLElement): string {
     provisions.unshift(...[newFirstComponent, newSecondComponent]);
   
     // In case user copies the more than one provision, including the provision number
-    const startIndex: number = domService.getStartIndexOfCopiedText(targetElement, parentFullText);
+    const startIndex: number = domService.getStartIndexOfCopiedText(targetElement.innerText, parentFullText);
     const endIndex: number = startIndex + targetElement.innerText.length;
     provisions.push(new ProvisionComponent(endIndex, '<EOS>')); // end of sentence token
   
@@ -43,7 +34,7 @@ export function getProvisions (targetElement: HTMLElement): string {
   
     // Add the provision components to the start of the array
     // e.g. (i) -> (a) -> 15
-    const provResult: string[] = [];
+    let provResult: string[] = [];
   
     for (const prov of provisions) {
       if (prov.index >= endIndex) continue;
@@ -78,6 +69,8 @@ export function getProvisions (targetElement: HTMLElement): string {
       const isFirstProvComponent: boolean = regexService.isNumber(prevProv);
       if (isFirstProvComponent) break;
     }
+
+    provResult = provResult.filter(prov => prov !== "(-1)");
   
     return provResult.join('');
   }

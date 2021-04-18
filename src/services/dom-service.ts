@@ -1,11 +1,10 @@
 export interface DOMImpl {
-  getStartIndexOfCopiedText (targetElement: HTMLElement, parentFullText: string): number;
+  getStartIndexOfCopiedText (targetElement: string, parentFullText: string): number;
   traverseUpToElement (element: HTMLElement, nodeName: string, iteration?: number): HTMLElement;
 }
 
 export class DOMService implements DOMImpl {
-  getStartIndexOfCopiedText (targetElement: HTMLElement, parentFullText: string): number {
-    const childFullText: string = targetElement.innerText;
+  getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
     const occurences = parentFullText.split(childFullText).length;
     if (occurences > 2) {
       console.log('Unable to process more than one matches');
