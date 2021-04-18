@@ -66,8 +66,6 @@ function removeUnhandledSectionText(targetElement: HTMLElement): string {
   if (matches.length === 0) return innerText;
 
   const index = matches[0].index as number;
-  // In case the user copies and include the subsection at the start of the sentence
-  if (index < 8) return innerText;
 
   const sectionText = targetElement.innerText.slice(0, index);
   return sectionText;
