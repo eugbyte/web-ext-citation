@@ -11,7 +11,7 @@ import { getProvisions } from "./getProvisions";
   3. Use regex to extract the provisions, e.g. (1)(a)(ii)
 */
 
-export function getCitation(targetElement: HTMLElement): string {
+export function getCitation(targetElement: HTMLElement, copiedText: string): string {
   const domService: DOMImpl = new DOMService();
 
   // Clone the target element so that the actual DOM is not affected
@@ -32,8 +32,13 @@ export function getCitation(targetElement: HTMLElement): string {
 
   // The full text of the sub section which the user copied
   let sectionText: string = cloneTarget.innerText;  
-  // sectionText = removeUnhandledSectionText(cloneTarget);
-  console.log("sectionText", sectionText);
+  sectionText = removeUnhandledSectionText(cloneTarget);
+
+  if (copiedText.length > sectionText.length) {
+    [copiedText, sectionText] = [sectionText, copiedText];
+  }
+
+  console.log(`sectionText: \n${sectionText}`);
 
   (cloneTarget.parentElement as HTMLElement).removeChild(cloneTarget);
 
@@ -52,6 +57,7 @@ export function getCitation(targetElement: HTMLElement): string {
     </span>
   */
   // That means the inner text will contain unwanted additional text from the table
+  
 function removeUnhandledSectionText(targetElement: HTMLElement): string {
   const regexService = new RegexService();
   const innerText = targetElement.innerText;

@@ -5,7 +5,7 @@ document.addEventListener('copy', (event: ClipboardEvent) => {
   const targetElement = event.target as HTMLElement;
 
   if (!copiedText) return;
-  const provision: string = getCitation(targetElement);
+  const provision: string = getCitation(targetElement, copiedText);
   console.log(`result: \n${provision}`);
 
   (event.clipboardData as DataTransfer).setData('text/plain', copiedText);
