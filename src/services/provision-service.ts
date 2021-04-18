@@ -20,6 +20,7 @@ export class ProvisionService implements ProvisionImpl {
   }
 
   // Need to seperate 15.—(1) into 15. and (1)
+  // Need to separate 15. into 15(-1) - because the rules to create the complete provision relies on the bracketed numberr, e.g. (2)
   splitFirstProvisionComponent (originalFirstComponent: ProvisionComponent): ProvisionComponent[] {
     const secondProvIndex = originalFirstComponent.index + originalFirstComponent.text.length;
 

@@ -35,7 +35,7 @@ export class RegexService implements RegexImpl {
   }
   
   titleCase (str: string): string {
-    return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase() });
+    return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); });
   }
 
   replaceMultiLineBreakWithSingleLineBreak(str: string): string {

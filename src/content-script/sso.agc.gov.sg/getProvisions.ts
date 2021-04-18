@@ -7,10 +7,13 @@ export function getProvisions (targetElement: HTMLElement): string {
     const regexService: RegexImpl = new RegexService();
     const provService: ProvisionImpl = new ProvisionService();
 
-    console.log("targetElement.innerText", targetElement.innerText);
+    console.log("Hello");
+
+    console.log("targetElement.innerText", "\n", targetElement.innerText);
   
     const parentElement: HTMLElement = domService.traverseUpToElement(targetElement, 'DIV');
-    let parentFullText: string = parentElement.innerText;
+    console.log("here");
+    const parentFullText: string = parentElement.innerText;
 
     // some provisions are 13., 14.—(1) 
     console.log("parentFullText", "\n", parentFullText);
