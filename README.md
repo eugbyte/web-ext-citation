@@ -1,5 +1,12 @@
 # web-ext-citation
 
+## To run
+`npm install`   
+`npm start`  
+
+In another terminal  
+`npm run dev`
+
 ## Folder structure and webpack
 ### src/asset
 Folder structure containing the components making up the background page for the web extension.  

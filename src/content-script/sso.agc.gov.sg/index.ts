@@ -28,19 +28,44 @@ export function getCitation(targetElement: HTMLElement, copiedText: string): str
   fullText = text1 + text2 + copiedText + text3
   */
   const rootElement: HTMLElement = domService.traverseUpToElement(cloneTarget, "DIV");
-  const fullText: string = rootElement.innerText;
+  let fullText: string = rootElement.innerText;
 
   // The full text of the sub section which the user copied
   let sectionText: string = cloneTarget.innerText;  
   sectionText = removeUnhandledSectionText(cloneTarget);
 
-  if (copiedText.length > sectionText.length) {
-    [copiedText, sectionText] = [sectionText, copiedText];
-  }
-
-  console.log(`sectionText: \n${sectionText}`);
-
+  // Remove the clone to prevent memory waste
   (cloneTarget.parentElement as HTMLElement).removeChild(cloneTarget);
+
+  // When the user selects the text from the one section
+
+  // Clean text
+  [sectionText, fullText, copiedText] = [sectionText, fullText, copiedText].map(txt => cleanText(txt));
+
+  // for (let i = 0; i < 200; i++) {
+  //   let word = fullText[i];
+  //   if (i < 1) continue;
+  //   if (/\s/.test(word) && word !== " ") {
+  //     let prevWord;
+  //     if (i > 10) {
+  //       prevWord = fullText.substring(i-10, i);
+  //     }
+      
+  //     console.log(prevWord);
+  //     console.log(JSON.stringify(word));
+  //     console.log("regexSpace^");
+  //     console.log();
+  //   }
+  // }
+ 
+  //sectionText  = '13. ';
+  //fullText = "Consent required\n13.  An organisation "
+
+  console.log(`fullText: \n${JSON.stringify(fullText)}|`)
+  console.log(`sectionText: \n${JSON.stringify(sectionText)}|`);
+  console.log(`copiedText: \n${JSON.stringify(copiedText)}|`);
+
+  console.log(fullText.includes(copiedText));
 
   const provision: string = getProvisions(sectionText, fullText);
   const chapter: string = getChapter();
@@ -57,7 +82,7 @@ export function getCitation(targetElement: HTMLElement, copiedText: string): str
     </span>
   */
   // That means the inner text will contain unwanted additional text from the table
-  
+  // so, one way is to remove the \n(a) appear in the next sibling
 function removeUnhandledSectionText(targetElement: HTMLElement): string {
   const regexService = new RegexService();
   const innerText = targetElement.innerText;
@@ -66,8 +91,13 @@ function removeUnhandledSectionText(targetElement: HTMLElement): string {
   if (matches.length === 0) return innerText;
 
   const index = matches[0].index as number;
-
-  const sectionText = targetElement.innerText.slice(0, index);
-  return sectionText;
+  return targetElement.innerText.slice(0, index);
 }
 
+function cleanText(str: string): string {
+  const regexService = new RegexService();
+  str = regexService.reduceLineBreaks(str);
+  str = regexService.replaceTabsWithSpace(str);
+  str = regexService.reduceWhiteSpacesExceptLineBreaks(str);
+  return str;
+}

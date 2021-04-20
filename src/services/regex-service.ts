@@ -7,6 +7,9 @@ export interface RegexImpl {
     titleCase (str: string): string;
     removeLineBreaks(str: string): string;
     getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number;
+    replaceTabsWithSpace(str: string): string;
+    reduceLineBreaks(str: string): string;
+    reduceWhiteSpacesExceptLineBreaks(str: string): string;
 }
 
 export class RegexService implements RegexImpl {
@@ -39,8 +42,24 @@ export class RegexService implements RegexImpl {
     return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); });
   }
 
+  replaceTabsWithSpace(str: string): string {
+    return str.replace(/\t+|\f+|\v+|\0+/g, " ");
+  }
+
   removeLineBreaks(str: string): string {
     return str.replace(/\n+/g, "");
+  }
+
+  reduceLineBreaks(str: string): string {
+    return str.replace(/[\n\r]+/g, "\n");
+  }
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes
+  reduceWhiteSpacesExceptLineBreaks(str: string): string {
+    return str.replace(
+      /[ \f\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g,
+      ' '
+    )
   }
 
   getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {

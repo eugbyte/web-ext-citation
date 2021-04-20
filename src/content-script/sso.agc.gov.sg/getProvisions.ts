@@ -17,9 +17,10 @@ export function getProvisions (sectionText: string, parentFullText: string): str
     const [newFirstComponent, newSecondComponent] = provService.splitFirstProvisionComponent(originalFirstComponent);
     provisions.unshift(...[newFirstComponent, newSecondComponent]);
   
-    // In case user copies the more than one provision, including the provision number
+    // Find the EOS token to know when to stop the search
     const startIndex: number = regexService.getStartIndexOfCopiedText(sectionText, parentFullText);
     const endIndex: number = startIndex + sectionText.length - 1;
+    console.log(startIndex, endIndex);
     provisions.push(new ProvisionComponent(endIndex, '<EOS>')); // end of sentence token
   
     // sort the provisonComponent array by descending order
@@ -64,6 +65,7 @@ export function getProvisions (sectionText: string, parentFullText: string): str
       if (isFirstProvComponent) break;
     }
 
+    // For provisions that are 15. , (-1) was previously added
     provResult = provResult.filter(prov => prov !== "(-1)");
     return provResult.join('');
   }

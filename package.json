@@ -8,9 +8,8 @@
     "lint": "eslint . --ext ts,js --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "build": "webpack",
-    "build:watch": "webpack watch",
-    "watch": "web-ext --source-dir build run",
-    "dev-watch": "web-ext --source-dir src/static run"
+    "dev": "webpack watch",
+    "start": "web-ext --source-dir build run"
   },
   "author": "",
   "license": "ISC",
