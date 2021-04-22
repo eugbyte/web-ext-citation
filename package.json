@@ -9,7 +9,8 @@
     "lint:fix": "npm run lint -- --fix",
     "build": "webpack",
     "dev": "webpack watch",
-    "start": "web-ext --source-dir build run"
+    "start": "web-ext --source-dir build run",
+    "type-check": "tsc --noEmit"
   },
   "author": "",
   "license": "ISC",
