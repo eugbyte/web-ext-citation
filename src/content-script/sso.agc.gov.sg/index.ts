@@ -10,6 +10,7 @@ import { getProvisions } from "./getProvisions";
     Cannot just use copied text as may be multiple occurences
   3. Use regex to extract the provisions, e.g. (1)(a)(ii)
 */
+const regexService = new RegexService();
 
 export function getCitation(targetElement: HTMLElement, copiedText: string): string {
   const domService: DOMImpl = new DOMService();
@@ -42,32 +43,21 @@ export function getCitation(targetElement: HTMLElement, copiedText: string): str
   // Clean text
   [sectionText, fullText, copiedText] = [sectionText, fullText, copiedText].map(txt => cleanText(txt));
 
-  // for (let i = 0; i < 200; i++) {
-  //   let word = fullText[i];
-  //   if (i < 1) continue;
-  //   if (/\s/.test(word) && word !== " ") {
-  //     let prevWord;
-  //     if (i > 10) {
-  //       prevWord = fullText.substring(i-10, i);
-  //     }
-      
-  //     console.log(prevWord);
-  //     console.log(JSON.stringify(word));
-  //     console.log("regexSpace^");
-  //     console.log();
-  //   }
-  // }
- 
-  //sectionText  = '13. ';
-  //fullText = "Consent required\n13.  An organisation "
+  
 
-  console.log(`fullText: \n${JSON.stringify(fullText)}|`)
-  console.log(`sectionText: \n${JSON.stringify(sectionText)}|`);
-  console.log(`copiedText: \n${JSON.stringify(copiedText)}|`);
+  console.log(`fullText: \n${JSON.stringify(fullText)}`);
+  console.log(`sectionText: \n${JSON.stringify(sectionText)}`);
+  console.log(`copiedText: \n${JSON.stringify(copiedText)}`);
 
-  console.log(fullText.includes(copiedText));
+  console.log(sectionText.includes(copiedText));
 
-  const provision: string = getProvisions(sectionText, fullText);
+  // If the user copies a short text, this might result in repeated occurences when searching for said text in the parentFullText
+  // Thus, combine the copied text with the sectionText, i.e., the text from the html element the copy event originated from
+  const unionText: string = regexService.unionStrings(copiedText, sectionText);
+  console.log(`unionText: \n${JSON.stringify(unionText)}`);
+
+
+  const provision: string = getProvisions(unionText, fullText);
   const chapter: string = getChapter();
 
   return `${chapter} s ${provision}`;
@@ -84,7 +74,6 @@ export function getCitation(targetElement: HTMLElement, copiedText: string): str
   // That means the inner text will contain unwanted additional text from the table
   // so, one way is to remove the \n(a) appear in the next sibling
 function removeUnhandledSectionText(targetElement: HTMLElement): string {
-  const regexService = new RegexService();
   const innerText = targetElement.innerText;
   const matches = regexService.findMatches(/\([a-z]+\)/g, innerText);
 
@@ -95,9 +84,7 @@ function removeUnhandledSectionText(targetElement: HTMLElement): string {
 }
 
 function cleanText(str: string): string {
-  const regexService = new RegexService();
   str = regexService.reduceLineBreaks(str);
-  str = regexService.replaceTabsWithSpace(str);
   str = regexService.reduceWhiteSpacesExceptLineBreaks(str);
   return str;
 }

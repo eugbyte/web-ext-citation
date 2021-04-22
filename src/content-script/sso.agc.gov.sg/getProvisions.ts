@@ -60,7 +60,7 @@ export function getProvisions (sectionText: string, parentFullText: string): str
       if (regexService.isBracketedNumber(prevProv) && regexService.isNumber(text)) provResult.unshift(text);
   
       // prevResult isNumber
-      // Only the first component of the provision is a number, e.g. 15 (a)(i)
+      // Only the first component of the provision is a number, e.g. 15
       const isFirstProvComponent: boolean = regexService.isNumber(prevProv);
       if (isFirstProvComponent) break;
     }
