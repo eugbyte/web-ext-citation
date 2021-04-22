@@ -10,9 +10,9 @@ module.exports = {
     ignored: /node_modules/,
   },
   entry: {
-    'content-script': './src/content-script/content-script.ts',
+    'content-script/sso.agc.gov.sg/content-script': './src/content-script/sso.agc.gov.sg/content-script.ts',
     'background-script': './src/background-script/background-script.ts',
-    index: './src/index.tsx'
+    'index': './src/index.tsx'
   },
   output: {
     filename: '[name].js',

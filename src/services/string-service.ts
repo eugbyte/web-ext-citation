@@ -1,4 +1,4 @@
-export interface RegexImpl {
+export interface StringImpl {
     findMatches (regex: RegExp, text: string): RegExpMatchArray[];
     isBracketedAlpha (str: string): boolean;
     isBracketedRoman (str: string): boolean;
@@ -12,7 +12,7 @@ export interface RegexImpl {
     unionStrings(str1: string, str2: string): string | void;
 }
 
-export class RegexService implements RegexImpl {
+export class StringService implements StringImpl {
   findMatches (regex: RegExp, text: string): RegExpMatchArray[] {
     const matches = [...text.matchAll(regex)];
     return matches;
@@ -37,21 +37,21 @@ export class RegexService implements RegexImpl {
   isNumber (str: string): boolean {
     return /^-?\d+$/.test(str);
   }
-  
+
   titleCase (str: string): string {
     return str.replace(/\w\S*/g, (t) => { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); });
   }
 
-  removeLineBreaks(str: string): string {
-    return str.replace(/\n+/g, "");
+  removeLineBreaks (str: string): string {
+    return str.replace(/\n+/g, '');
   }
 
-  reduceLineBreaks(str: string): string {
-    return str.replace(/[\n\r]+/g, "\n");
+  reduceLineBreaks (str: string): string {
+    return str.replace(/[\n\r]+/g, '\n');
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes
-  reduceWhiteSpacesExceptLineBreaks(str: string): string {
+  reduceWhiteSpacesExceptLineBreaks (str: string): string {
     return str.replace(
       /[ \f\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g,
       ' '
@@ -71,43 +71,43 @@ export class RegexService implements RegexImpl {
   // str2 = "orange durian"
   // overlap = durian
   // str1 comes before str2
-  private _findOverlap(str1: string, str2: string): string {
+  private _findOverlap (str1: string, str2: string): string {
     let str2Copy = str2;
-    let overlap = "";
+    let overlap = '';
 
     // slice from the end
-    console.log("slicing str2 from end");
     while (str2Copy.length > 0) {
-        if (str1.includes(str2Copy)) {
-            overlap = str2Copy;
-            console.log(`overlap: ${overlap}`);
-            break;
-        }
-        str2Copy = str2Copy.slice(0, str2Copy.length - 1);
+      if (str1.includes(str2Copy)) {
+        overlap = str2Copy;
+        break;
+      }
+      str2Copy = str2Copy.slice(0, str2Copy.length - 1);
     }
-    return overlap; 
+    return overlap;
   }
 
-  findOverlapText(str1: string, str2: string): string {
+  findOverlapText (str1: string, str2: string): string {
     const overlapText1: string = this._findOverlap(str1, str2);
     const overlapText2 = this._findOverlap(str2, str1);
-    const overlapText = ([overlapText1, overlapText2].sort())[1];
-    return overlapText;
+    // for some reason, sort() without argument not working with "—" character
+    const overlapText = [overlapText1, overlapText2].sort((a, b) => a.length - b.length);
+    return overlapText[1];
   }
 
-  unionStrings(str1: string, str2: string): string {
+  unionStrings (str1: string, str2: string): string {
     const overlapText = this.findOverlapText(str1, str2);
+    console.log('overlap:', overlapText);
 
     if (overlapText.length === 0) {
-      console.log("no overlap found");
-      throw new Error("No overlap found");
+      console.log('no overlap found');
+      throw new Error('No overlap found');
     }
 
     // Assumption is that:
     // str1 = unqiueText1 + common
     // str2 = common + uniqueText2
     if (str1.startsWith(overlapText)) {
-      [str1, str2] = [str2, str1];      
+      [str1, str2] = [str2, str1];
     }
 
     const endIndexOfOverlapInStr2 = overlapText.length;

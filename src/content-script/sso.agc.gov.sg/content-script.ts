@@ -1,4 +1,4 @@
-import { getCitation } from "./sso.agc.gov.sg";
+import { getCitation } from './get-citation';
 
 document.addEventListener('copy', (event: ClipboardEvent) => {
   const copiedText: string | undefined = document.getSelection()?.toString();

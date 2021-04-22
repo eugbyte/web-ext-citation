@@ -4,10 +4,10 @@ export interface DOMImpl {
 }
 
 export class DOMService implements DOMImpl {
-  duplicateNodeWithParentRef(targetElement: HTMLElement): HTMLElement {
+  duplicateNodeWithParentRef (targetElement: HTMLElement): HTMLElement {
     const cloneTarget = targetElement.cloneNode(true) as HTMLElement;
-    cloneTarget.id = "clone";
-    cloneTarget.style.display = "none";
+    cloneTarget.id = 'clone';
+    cloneTarget.style.display = 'none';
 
     const parentElement = targetElement.parentElement as HTMLElement;
     parentElement.appendChild(cloneTarget);
@@ -20,8 +20,4 @@ export class DOMService implements DOMImpl {
     }
     return element;
   }
-
-  
-
-
 }

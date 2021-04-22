@@ -30,16 +30,15 @@ export class ProvisionService implements ProvisionImpl {
         new ProvisionComponent(originalFirstComponent.index, firstProvText),
         new ProvisionComponent(secondProvIndex, `\n${secondProvText}`)
       ];
-    } 
+    }
 
-    if ( (/\d+\./).test(originalFirstComponent.text)) {
-      const newFirstComponentText = originalFirstComponent.text.replace(".", "");
+    if ((/\d+\./).test(originalFirstComponent.text)) {
+      const newFirstComponentText = originalFirstComponent.text.replace('.', '');
       return [
         new ProvisionComponent(originalFirstComponent.index, newFirstComponentText),
-        new ProvisionComponent(secondProvIndex, "\n(-1)")
+        new ProvisionComponent(secondProvIndex, '\n(-1)')
       ];
     }
     throw new Error("The first provision component did not contain either '.—' or . ");
   }
-
 }
