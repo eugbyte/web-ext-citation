@@ -12,7 +12,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://*/*"],
+        "matches": ["https://sso.agc.gov.sg/*"],
         "js": ["content-script/sso.agc.gov.sg/index.js"]
       }
     ],
