@@ -21,6 +21,7 @@
     ],
     "rules": {
         "no-useless-constructor": 0,
-        "semi": [2, "always"]
+        "semi": [2, "always"],
+        "@typescript-eslint/no-unused-vars": 2
     }
 }
