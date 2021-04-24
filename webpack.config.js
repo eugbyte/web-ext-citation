@@ -10,8 +10,8 @@ module.exports = {
     ignored: /node_modules/,
   },
   entry: {
-    'content-script/sso.agc.gov.sg/index': './src/content-script/sso.agc.gov.sg/index.ts',
-    'background-script': './src/background-script/background-script.ts',
+    'content-scripts/sso.agc.gov.sg/index': './src/content-scripts/sso.agc.gov.sg/index.ts',
+    'background-script/index': './src/background-scripts/index.ts',
     'index': './src/index.tsx'
   },
   output: {

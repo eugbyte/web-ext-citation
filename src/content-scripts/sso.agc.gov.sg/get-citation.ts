@@ -1,7 +1,14 @@
-import { DOMImpl, DOMService } from 'src/services/dom-service';
-import { StringService } from 'src/services/string-service';
+import { DOMService } from 'src/services/dom-service';
+import { ProvisionImpl } from 'src/services/provision-service';
+import { StringImpl } from 'src/services/string-service';
 import { getChapter } from './get-chapter';
-import { getProvisions } from './get-provision';
+import { getProvisions } from './get-provisions';
+
+interface ServicesImpl {
+  stringService: StringImpl;
+  domService: DOMService;
+  provisionService: ProvisionImpl
+}
 
 /*
   The idea here is to
@@ -10,11 +17,10 @@ import { getProvisions } from './get-provision';
     Cannot just use copied text as may be multiple occurences
   3. Use regex to extract the provisions, e.g. (1)(a)(ii)
 */
-const regexService = new StringService();
 
-export function getCitation (targetElement: HTMLElement, copiedText: string): string {
-  const domService: DOMImpl = new DOMService();
-
+export function getCitation (targetElement: HTMLElement, copiedText: string,
+  { stringService, domService, provisionService }: ServicesImpl
+): string {
   // Clone the target element so that the actual DOM is not affected
   const cloneTarget: HTMLElement = domService.duplicateNodeWithParentRef(targetElement);
 
@@ -33,7 +39,7 @@ export function getCitation (targetElement: HTMLElement, copiedText: string): st
 
   // The full text of the sub section which the user copied
   let sectionText: string = cloneTarget.innerText;
-  sectionText = removeUnhandledSectionText(cloneTarget);
+  sectionText = removeUnhandledSectionText(cloneTarget, stringService);
 
   // Remove the clone to prevent memory waste
   (cloneTarget.parentElement as HTMLElement).removeChild(cloneTarget);
@@ -41,7 +47,7 @@ export function getCitation (targetElement: HTMLElement, copiedText: string): st
   // When the user selects the text from the one section
 
   // Clean text
-  [sectionText, fullText, copiedText] = [sectionText, fullText, copiedText].map(txt => cleanText(txt));
+  [sectionText, fullText, copiedText] = [sectionText, fullText, copiedText].map(txt => cleanText(txt, stringService));
 
   console.log(`fullText: \n${JSON.stringify(fullText)}`);
   console.log(`sectionText: \n${JSON.stringify(sectionText)}`);
@@ -51,11 +57,11 @@ export function getCitation (targetElement: HTMLElement, copiedText: string): st
 
   // If the user copies a short text, this might result in repeated occurences when searching for said text in the parentFullText
   // Thus, combine the copied text with the sectionText, i.e., the text from the html element the copy event originated from
-  const unionText: string = regexService.unionStrings(copiedText, sectionText);
+  const unionText = stringService.unionStrings(copiedText, sectionText) as string;
   console.log(`unionText: \n${JSON.stringify(unionText)}`);
 
-  const provision: string = getProvisions(unionText, fullText);
-  const chapter: string = getChapter();
+  const provision: string = getProvisions(unionText, fullText, { stringService, provisionService });
+  const chapter: string = getChapter({ stringService });
 
   return `${chapter} s ${provision}`;
 }
@@ -70,9 +76,9 @@ export function getCitation (targetElement: HTMLElement, copiedText: string): st
   */
 // That means the inner text will contain unwanted additional text from the table
 // so, one way is to remove the \n(a) appear in the next sibling
-function removeUnhandledSectionText (targetElement: HTMLElement): string {
+function removeUnhandledSectionText (targetElement: HTMLElement, stringService: StringImpl): string {
   const innerText = targetElement.innerText;
-  const matches = regexService.findMatches(/\([a-z]+\)/g, innerText);
+  const matches = stringService.findMatches(/\([a-z]+\)/g, innerText);
 
   if (matches.length === 0) return innerText;
 
@@ -80,8 +86,8 @@ function removeUnhandledSectionText (targetElement: HTMLElement): string {
   return targetElement.innerText.slice(0, index);
 }
 
-function cleanText (str: string): string {
-  str = regexService.reduceLineBreaks(str);
-  str = regexService.reduceWhiteSpacesExceptLineBreaks(str);
+function cleanText (str: string, stringService: StringImpl): string {
+  str = stringService.reduceLineBreaks(str);
+  str = stringService.reduceWhiteSpacesExceptLineBreaks(str);
   return str;
 }

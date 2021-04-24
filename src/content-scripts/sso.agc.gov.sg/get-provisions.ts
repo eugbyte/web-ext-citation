@@ -1,30 +1,32 @@
-import { ProvisionImpl, ProvisionService, ProvisionComponent } from 'src/services/provision-service';
-import { StringImpl, StringService } from 'src/services/string-service';
+import { ProvisionImpl, ProvisionComponent } from 'src/services/provision-service';
+import { StringImpl } from 'src/services/string-service';
 
-export function getProvisions (sectionText: string, parentFullText: string): string {
-  const regexService: StringImpl = new StringService();
-  const provService: ProvisionImpl = new ProvisionService();
+interface ServicesImpl {
+  stringService: StringImpl;
+  provisionService: ProvisionImpl;
+}
 
+export function getProvisions (sectionText: string, parentFullText: string, { stringService, provisionService }: ServicesImpl): string {
   // E.g. 15.—(1) or 15. or (a)
   const regex = /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
 
-  const matches: RegExpMatchArray[] = regexService.findMatches(regex, parentFullText);
+  const matches: RegExpMatchArray[] = stringService.findMatches(regex, parentFullText);
   let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
 
   // Need to seperate 15.—(1) into 15 and (1)
   // Need to separate 15. into 15 and (-1). Need -1 as the rules for completing a provision assumes a bracketed number, e.g. 15(2)
   const originalFirstComponent = provisions.shift() as ProvisionComponent;
-  const [newFirstComponent, newSecondComponent] = provService.splitFirstProvisionComponent(originalFirstComponent);
+  const [newFirstComponent, newSecondComponent] = provisionService.splitFirstProvisionComponent(originalFirstComponent);
   provisions.unshift(...[newFirstComponent, newSecondComponent]);
 
   // Find the EOS token to know when to stop the search
-  const startIndex: number = regexService.getStartIndexOfCopiedText(sectionText, parentFullText);
+  const startIndex: number = stringService.getStartIndexOfCopiedText(sectionText, parentFullText);
   const endIndex: number = startIndex + sectionText.length - 1;
   console.log(startIndex, endIndex);
   provisions.push(new ProvisionComponent(endIndex, '<EOS>')); // end of sentence token
 
   // sort the provisonComponent array by descending order
-  provisions = provService.sortProvComponentsByDescending(provisions);
+  provisions = provisionService.sortProvComponentsByDescending(provisions);
   console.log(provisions);
 
   // Add the provision components to the start of the array
@@ -50,18 +52,18 @@ export function getProvisions (sectionText: string, parentFullText: string): str
     // prevProvResult isRoman, add the next prov that is alpha
     // e.g. (i), next prov should be (a)
     // need to cater for e.g. 15(i), by checking for Roman first before Alpha
-    if (regexService.isBracketedRoman(prevProv) && regexService.isBracketedAlpha(text) && text !== '(i)') provResult.unshift(text);
+    if (stringService.isBracketedRoman(prevProv) && stringService.isBracketedAlpha(text) && text !== '(i)') provResult.unshift(text);
 
     // prevProvResult isAlpha, add the next prov that is a number
     // e.g. (a), next prov should be (2)
-    if (regexService.isBracketedAlpha(prevProv) && regexService.isBracketedNumber(text)) provResult.unshift(text);
+    if (stringService.isBracketedAlpha(prevProv) && stringService.isBracketedNumber(text)) provResult.unshift(text);
 
     // e.g. (2), next prov should be 15
-    if (regexService.isBracketedNumber(prevProv) && regexService.isNumber(text)) provResult.unshift(text);
+    if (stringService.isBracketedNumber(prevProv) && stringService.isNumber(text)) provResult.unshift(text);
 
     // prevResult isNumber
     // Only the first component of the provision is a number, e.g. 15
-    const isFirstProvComponent: boolean = regexService.isNumber(prevProv);
+    const isFirstProvComponent: boolean = stringService.isNumber(prevProv);
     if (isFirstProvComponent) break;
   }
 
