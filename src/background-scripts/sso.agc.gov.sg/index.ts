@@ -1,20 +1,16 @@
 import { browser } from 'webextension-polyfill-ts';
 import { ACTION, Action } from 'src/models/Action';
+import { BackgroundScriptImpl, BackgroundScriptService } from 'src/services/background-script-service';
 
-// listen for actions from content-script
-function reducer () {
-  browser.runtime.onMessage.addListener((message: Action) => {
-    if (message.type === ACTION.NOTIFICATION) createNotification(message);
+function reducer (backgroundScriptService: BackgroundScriptImpl): void {
+  browser.runtime.onMessage.addListener((action: Action) => {
+    const payload = action.payload;
+    if (action.type === ACTION.NOTIFICATION_SUCCESS) {
+      backgroundScriptService.createBasicNotification('Provision Copied', payload);
+    } else if (action.type === ACTION.NOTIFICATION_ERROR) {
+      backgroundScriptService.createBasicNotification('Error', payload);
+    }
   });
 }
 
-reducer();
-
-function createNotification (message: Action) {
-  browser.notifications.create({
-    type: 'basic',
-    title: 'Provision Copied',
-    message: message.payload
-  });
-}
-
+reducer(new BackgroundScriptService());

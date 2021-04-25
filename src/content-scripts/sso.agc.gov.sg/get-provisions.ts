@@ -1,3 +1,5 @@
+import { CitationError } from 'src/models/CitationError';
+import { Warning } from 'src/models/Warning';
 import { ProvisionImpl, ProvisionComponent } from 'src/services/provision-service';
 import { StringImpl } from 'src/services/string-service';
 
@@ -20,7 +22,11 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
   provisions.unshift(...[newFirstComponent, newSecondComponent]);
 
   // Find the EOS token to know when to stop the search
-  const startIndex: number = stringService.getStartIndexOfCopiedText(sectionText, parentFullText);
+  const startIndex: number = getStartIndexOfCopiedText(sectionText, parentFullText);
+  if (startIndex === -1) {
+    console.log(`cannot locate ${sectionText}`);
+    throw new CitationError('internal error');
+  }
   const endIndex: number = startIndex + sectionText.length - 1;
   console.log(startIndex, endIndex);
   provisions.push(new ProvisionComponent(endIndex, '<EOS>')); // end of sentence token
@@ -70,4 +76,13 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
   // For provisions that are 15. , (-1) was previously added
   provResult = provResult.filter(prov => prov !== '(-1)');
   return provResult.join('');
+}
+
+function getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
+  const occurences = parentFullText.split(childFullText).length;
+  if (occurences > 2) {
+    console.log('Unable to process more than one matches');
+    Warning.sendNotification('Unable to process more than one matches');
+  }
+  return parentFullText.indexOf(childFullText);
 }

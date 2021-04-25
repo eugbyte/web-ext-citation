@@ -1,9 +1,11 @@
 export enum ACTION {
   FROM_POPUP = 'FROM_POPUP',
-  NOTIFICATION = 'NOTIFICATION',
+  NOTIFICATION_SUCCESS = 'NOTIFICATION_SUCCESS',
+  NOTIFICATION_WARNING = 'NOTIFICATION_WARNING',
+  NOTIFICATION_ERROR = 'NOTIFICATION_ERROR',
   FROM_CONTENT_SCRIPT = 'FROM_CONTENT_SCRIPT'
 }
 
 export class Action {
-  constructor (public type: string, public payload: any, public tabId = 0) {}
+  constructor (public type: string, public payload: any) {}
 }

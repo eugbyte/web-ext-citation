@@ -6,7 +6,6 @@ export interface StringImpl {
     isNumber (str: string): boolean;
     titleCase (str: string): string;
     removeLineBreaks(str: string): string;
-    getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number;
     reduceLineBreaks(str: string): string;
     reduceWhiteSpacesExceptLineBreaks(str: string): string;
     unionStrings(str1: string, str2: string): string | void;
@@ -56,15 +55,6 @@ export class StringService implements StringImpl {
       /[ \f\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g,
       ' '
     );
-  }
-
-  getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
-    const occurences = parentFullText.split(childFullText).length;
-    if (occurences > 2) {
-      console.log('Unable to process more than one matches');
-      throw new Error('Unable to process more than one matches');
-    }
-    return parentFullText.indexOf(childFullText);
   }
 
   // str1 = "apple pear orange"

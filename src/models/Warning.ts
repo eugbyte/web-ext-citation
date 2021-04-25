@@ -1,4 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
+import { Action, ACTION } from './Action';
 
 export class Warning {
   constructor (public message: string) {}
@@ -7,10 +8,6 @@ export class Warning {
   }
 
   static sendNotification (message: string): void {
-    browser.notifications.create('warning', {
-      type: 'basic',
-      title: 'Warning',
-      message
-    });
+    browser.runtime.sendMessage(new Action(ACTION.NOTIFICATION_WARNING, message));
   }
 }
