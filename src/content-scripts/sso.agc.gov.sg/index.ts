@@ -24,10 +24,15 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
     (event.clipboardData as DataTransfer).setData(FORMAT.HTML, generateTemplate(copiedText, provision, FORMAT.HTML));
     // (event.clipboardData as DataTransfer).setData('application/xml', `<w:footnote >${provision}</w:footnotes>`);
 
+    browser.runtime.sendMessage(new Action(ACTION.NOTIFICATION, provision));
+
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
     event.preventDefault();
+
   });
 
+  // Avoid nested event listeners otherwise there will be closures
+  // the variables will be bound and not updated
   browser.runtime.onMessage.addListener((message: Action, _sender, sendResponse) => {
     if (message.type === ACTION.FROM_POPUP) {
       sendResponse(provision);

@@ -16,8 +16,12 @@
         "js": ["content-scripts/sso.agc.gov.sg/index.js"]
       }
     ],
+    "background": {
+      "scripts": ["background-scripts/sso.agc.gov.sg/index.js"]
+    },
     "permissions": [
-      "activeTab"
+      "activeTab",
+      "notifications"
     ]
   }
   

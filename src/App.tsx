@@ -9,10 +9,8 @@ function App() {
     queryContentScript().then(response => setMessage(response));
 
     browser.runtime.onMessage.addListener((message: Action, _sender) => {
-        if (message.type === ACTION.FROM_CONTENT_SCRIPT) {
-            setMessage(message.payload);
-        }
-    });
+        if (message.type === ACTION.FROM_CONTENT_SCRIPT) setMessage(message.payload);
+    });  
     
     return (
         <div className="text-red-500">
