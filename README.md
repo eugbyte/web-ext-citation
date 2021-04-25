@@ -35,5 +35,11 @@ When compilation occurs, the manifest.json files and icons are preserved and cop
   
 To configure Tailwind with webpack, `MiniCssExtractPlugin.loader`, `css-loader`, `postcss-loader` are needed.  
 `postcss-loader` process Tailwind syntax into pure css.
-`MiniCssExtractPlugin.loader` extracts CSS into separate files instead of compiling the css into js.
+`MiniCssExtractPlugin.loader` extracts CSS into separate files instead of compiling the css into js.  
+
+### Message passing  
+Communication of data is between:  
+1.  content-script - background-script (https://developer.chrome.com/docs/extensions/mv3/messaging/)
+2.  content-script - popup-script (https://stackoverflow.com/a/31112456/6514532) 
+
   

@@ -28,17 +28,20 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
 
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
     event.preventDefault();
-
   });
 
+  // Listen from actions from the popup-script
   // Avoid nested event listeners otherwise there will be closures
   // the variables will be bound and not updated
   browser.runtime.onMessage.addListener((message: Action, _sender, sendResponse) => {
     if (message.type === ACTION.FROM_POPUP) {
-      sendResponse(provision);
+      sendResponse(new Action(ACTION.FROM_CONTENT_SCRIPT, provision));
     }
   });
 }
+
+// Dependency Injection
+main(new StringService(), new DOMService(), new ProvisionService());
 
 function generateTemplate (copiedText: string, provision: string, format: FORMAT): string {
   switch (format) {
@@ -52,6 +55,3 @@ function generateTemplate (copiedText: string, provision: string, format: FORMAT
       return '';
   }
 }
-
-// Dependency Injection
-main(new StringService(), new DOMService(), new ProvisionService());
