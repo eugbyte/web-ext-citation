@@ -2,6 +2,8 @@ import { DOMImpl, DOMService } from 'src/services/dom-service';
 import { ProvisionImpl, ProvisionService } from 'src/services/provision-service';
 import { StringImpl, StringService } from 'src/services/string-service';
 import { getCitation } from './get-citation';
+import { browser } from 'webextension-polyfill-ts';
+import { ACTION, Action } from 'src/models/Action';
 
 enum FORMAT {
   PLAIN_TEXT = 'text/plain',
@@ -9,12 +11,13 @@ enum FORMAT {
 }
 
 function main (stringService: StringImpl, domService: DOMImpl, provisionService: ProvisionImpl) {
+  let provision = '';
   document.addEventListener('copy', (event: ClipboardEvent) => {
     const copiedText: string | undefined = document.getSelection()?.toString();
     const targetElement = event.target as HTMLElement;
 
     if (!copiedText) return;
-    const provision: string = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
+    provision = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
     console.log(`${provision}`);
 
     (event.clipboardData as DataTransfer).setData(FORMAT.PLAIN_TEXT, generateTemplate(copiedText, provision, FORMAT.PLAIN_TEXT));
@@ -23,6 +26,12 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
 
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
     event.preventDefault();
+  });
+
+  browser.runtime.onMessage.addListener((message: Action, _sender, sendResponse) => {
+    if (message.type === ACTION.FROM_POPUP) {
+      sendResponse(provision);
+    }
   });
 }
 

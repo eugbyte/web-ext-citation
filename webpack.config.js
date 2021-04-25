@@ -11,7 +11,7 @@ module.exports = {
   },
   entry: {
     'content-scripts/sso.agc.gov.sg/index': './src/content-scripts/sso.agc.gov.sg/index.ts',
-    'background-script/index': './src/background-scripts/index.ts',
+    'background-scripts/sso.agc.gov.sg/index': './src/background-scripts/sso.agc.gov.sg/index.ts',
     'index': './src/index.tsx'
   },
   output: {
