@@ -5,13 +5,9 @@ type subscribeFn = (message: any, sender: Runtime.MessageSender, sendResponse: (
 
 export interface ContentScriptImpl {
     sendMessage(message: Action): void;
-    to(_destination: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): {
-        sendMessage: (message: Action) => void;
-    }
+    to(_destination: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): ContentScriptImpl;
     subscribe(cb: subscribeFn): void;
-    from(_source: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): {
-        subscribe: (cb: subscribeFn) => void;
-    }
+    from(_source: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): ContentScriptImpl;
 }
 
 export class ContentScriptService implements ContentScriptImpl {
@@ -21,9 +17,7 @@ export class ContentScriptService implements ContentScriptImpl {
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   to (_destination: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT') {
-    return {
-      sendMessage: this.sendMessage
-    };
+    return this;
   }
 
   subscribe (cb: subscribeFn) {
@@ -32,8 +26,6 @@ export class ContentScriptService implements ContentScriptImpl {
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   from (_source: 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT') {
-    return {
-      subscribe: this.subscribe
-    };
+    return this;
   }
 }

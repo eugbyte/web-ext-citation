@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { browser, Tabs } from 'webextension-polyfill-ts';
 import { ACTION, Action } from './models/Action';
 import { BackgroundScriptImpl, BackgroundScriptService } from './services/background-script-service';
 import './styles/styles.css';
