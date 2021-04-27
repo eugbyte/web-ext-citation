@@ -4,7 +4,6 @@ import { StringImpl, StringService } from 'src/services/string-service';
 import { getCitation } from './get-citation';
 import { ACTION, Action } from 'src/models/Action';
 import { ContentScriptImpl, ContentScriptService } from 'src/services/content-script-service';
-import { BackgroundScriptService } from 'src/services/background-script-service';
 
 enum FORMAT {
   PLAIN_TEXT = 'text/plain',
@@ -13,21 +12,25 @@ enum FORMAT {
 
 function main (stringService: StringImpl, domService: DOMImpl, provisionService: ProvisionImpl, contentScriptService: ContentScriptImpl) {
   let provision = '';
+  let err: Error | null = null;
   document.addEventListener('copy', (event: ClipboardEvent) => {
     const copiedText: string | undefined = document.getSelection()?.toString();
     const targetElement = event.target as HTMLElement;
 
     if (!copiedText) return;
-    provision = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
-    console.log(`${provision}`);
+    try {
+      provision = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
+      console.log(`${provision}`);
+    } catch (error) {
+      err = error;
+      contentScriptService
+        .to('BACKGROUND-SCRIPT')
+        .sendMessage(new Action(ACTION.NOTIFICATION_ERROR, 'An Error Occured'));
+    }
 
-    (event.clipboardData as DataTransfer).setData(FORMAT.PLAIN_TEXT, generateTemplate(copiedText, provision, FORMAT.PLAIN_TEXT));
-    (event.clipboardData as DataTransfer).setData(FORMAT.HTML, generateTemplate(copiedText, provision, FORMAT.HTML));
+    (event.clipboardData as DataTransfer).setData(FORMAT.PLAIN_TEXT, generateTemplate(copiedText as string, provision, FORMAT.PLAIN_TEXT));
+    (event.clipboardData as DataTransfer).setData(FORMAT.HTML, generateTemplate(copiedText as string, provision, FORMAT.HTML));
     // (event.clipboardData as DataTransfer).setData('application/xml', `<w:footnote >${provision}</w:footnotes>`);
-
-    contentScriptService
-      .to('BACKGROUND-SCRIPT')
-      .sendMessage(new Action(ACTION.NOTIFICATION_SUCCESS, provision));
 
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
     event.preventDefault();
@@ -38,22 +41,17 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   // the variables will be bound and not updated
   contentScriptService
     .from('POPUP-SCRIPT')
-    .subscribe((message: Action, _sender, sendResponse) => {
-      if (message.type === ACTION.FROM_POPUP) {
-        sendResponse(new Action(ACTION.FROM_CONTENT_SCRIPT, provision));
+    .subscribe((message: Action) => {
+      if (message.type === ACTION.PROVISION_STATUS && provision.length > 0) {
+        return Promise.resolve(new Action(ACTION.PROVISION_SUCCESS, provision));
+      } else if (message.type === ACTION.PROVISION_STATUS && err != null) {
+        return Promise.resolve(new Action(ACTION.PROVISION_ERROR, err.message));
       }
     });
 }
 
-try {
-  // Dependency Injection
-  main(new StringService(), new DOMService(), new ProvisionService(), new ContentScriptService());
-} catch (error) {
-  // if there are errors, send basic notification to user
-  console.log(error);
-  const backgroundScriptService = new BackgroundScriptService();
-  backgroundScriptService.createBasicNotification('Error', 'Error occured');
-}
+// Dependency Injection
+main(new StringService(), new DOMService(), new ProvisionService(), new ContentScriptService());
 
 function generateTemplate (copiedText: string, provision: string, format: FORMAT): string {
   switch (format) {

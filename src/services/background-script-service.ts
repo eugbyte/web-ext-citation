@@ -1,7 +1,8 @@
 import { Action } from 'src/models/Action';
 import { browser, Tabs, Runtime } from 'webextension-polyfill-ts';
 
-type subscribeFn = (message: any, sender: Runtime.MessageSender, sendResponse: (args: any) => void) => void
+// return a Promise if you want to send back a response
+type subscribeFn = (message: any, sender: Runtime.MessageSender) => void | Promise<any>
 
 export interface BackgroundScriptImpl {
     sendMessage(message: Action, tabId?: number | undefined): Promise<Action>;

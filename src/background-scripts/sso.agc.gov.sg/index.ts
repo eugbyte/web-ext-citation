@@ -4,7 +4,7 @@ import { BackgroundScriptImpl, BackgroundScriptService } from 'src/services/back
 
 function reducer (backgroundScriptService: BackgroundScriptImpl): void {
   browser.runtime.onMessage.addListener((action: Action) => {
-    const payload = action.payload;
+    const payload: string = action.payload;
     if (action.type === ACTION.NOTIFICATION_SUCCESS) {
       backgroundScriptService.createBasicNotification('Provision Copied', payload);
     } else if (action.type === ACTION.NOTIFICATION_ERROR) {

@@ -1,7 +1,8 @@
 import { Action } from 'src/models/Action';
 import { browser, Runtime } from 'webextension-polyfill-ts';
 
-type subscribeFn = (message: any, sender: Runtime.MessageSender, sendResponse: (args: any) => void) => void
+// return a Promise if you want to send back a response
+type subscribeFn = (message: any, sender: Runtime.MessageSender) => void | Promise<any>
 
 export interface ContentScriptImpl {
     sendMessage(message: Action): void;
