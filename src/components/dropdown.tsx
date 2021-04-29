@@ -7,6 +7,9 @@ interface Prop {
 export function Dropdown({handleChange}: Prop): JSX.Element {
 
   return <div>
-
+    <select>
+      <option>Plain text</option>
+      <option></option>
+    </select>
   </div>
 }

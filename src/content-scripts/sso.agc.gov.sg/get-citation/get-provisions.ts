@@ -24,7 +24,7 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
   // Find the EOS token to know when to stop the search
   const startIndex: number = getStartIndexOfCopiedText(sectionText, parentFullText);
   if (startIndex === -1) {
-    console.log(`cannot locate ${sectionText}`);
+    console.log(`cannot locate \n${sectionText}`);
     throw new CitationError('internal error');
   }
   const endIndex: number = startIndex + sectionText.length - 1;

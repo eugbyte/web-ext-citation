@@ -21,7 +21,10 @@
     },
     "permissions": [
       "activeTab",
-      "notifications"
+      "notifications",
+      "contextMenus",
+      "clipboardRead",
+      "clipboardWrite"
     ]
   }
   

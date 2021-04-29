@@ -33,16 +33,19 @@ function App() {
             <Dropdown handleChange={handleChange} />
             <p className="font-semibold text-xs text text-blue-500 text-center">Legal Citer</p> 
             { action.payload &&
+            <>
+                <p className={`font-bold text-xs 
+                    text-${colors[action.type]}`}>
+                    Most recent:
+                </p>
                 <Card className={`items-start 
                     p-1 
                     bg-${colors[action.type]}`}>
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
+            </>
             }          
-            <p className={`font-bold text-xs 
-                text-${colors[action.type]}`}>
-                Most recent:
-            </p>
+            
                     
         </div>
     );

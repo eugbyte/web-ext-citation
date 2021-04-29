@@ -1,8 +1,8 @@
 import { Action } from 'src/models/Action';
-import { browser, Tabs, Runtime } from 'webextension-polyfill-ts';
+import { browser, Tabs, Runtime, Menus } from 'webextension-polyfill-ts';
 
 // return a Promise if you want to send back a response
-type subscribeFn = (message: any, sender: Runtime.MessageSender) => void | Promise<any>
+type subscribeFn = (message: any, sender: Runtime.MessageSender) => void | Promise<any>;
 
 export interface BackgroundScriptImpl {
     sendMessage(message: Action, tabId?: number | undefined): Promise<Action>;
@@ -10,6 +10,8 @@ export interface BackgroundScriptImpl {
     subscribe(cb: subscribeFn): void;
     from(_source: 'CONTENT-SCRIPT' | 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): BackgroundScriptImpl;
     createBasicNotification(title: string, message: string, iconUrl?: string): void;
+    createConextMenu({id, title, contexts, icons, checked}: Menus.CreateCreatePropertiesType): void;
+    contextMenuOnClick(cb: (info: Menus.OnClickData, tab?: Tabs.Tab | undefined) => void): void;
 }
 
 export class BackgroundScriptService implements BackgroundScriptImpl {
@@ -49,4 +51,14 @@ export class BackgroundScriptService implements BackgroundScriptImpl {
       iconUrl
     });
   }
+
+  createConextMenu({id, title, contexts, icons, checked}: Menus.CreateCreatePropertiesType) {
+    browser.contextMenus.create({id, title, contexts, icons, checked});
+  }
+
+  contextMenuOnClick(cb: (info: Menus.OnClickData, tab?: Tabs.Tab | undefined) => void) {
+    browser.contextMenus.onClicked.addListener(cb);
+  }
+
+
 }
