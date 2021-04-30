@@ -9,7 +9,7 @@ export interface BackgroundScriptImpl {
     to(_destination: 'CONTENT-SCRIPT' | 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): BackgroundScriptImpl;
     subscribe(cb: subscribeFn): void;
     from(_source: 'CONTENT-SCRIPT' | 'BACKGROUND-SCRIPT' | 'POPUP-SCRIPT'): BackgroundScriptImpl;
-    createBasicNotification(title: string, message: string, iconUrl?: string): void;    
+    createBasicNotification(title: string, message: string, iconUrl?: string): void;
     createConextMenu({ id, title, contexts, icons, checked }: Menus.CreateCreatePropertiesType): void;
     contextMenuOnClick(cb: (info: Menus.OnClickData, tab?: Tabs.Tab | undefined) => void): void;
 }
@@ -59,6 +59,4 @@ export class BackgroundScriptService implements BackgroundScriptImpl {
   contextMenuOnClick (cb: (info: Menus.OnClickData, tab?: Tabs.Tab | undefined) => void) {
     browser.contextMenus.onClicked.addListener(cb);
   }
-
-  
 }

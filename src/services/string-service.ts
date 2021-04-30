@@ -47,7 +47,7 @@ export class StringService implements StringImpl {
     return /^-?\d+$/.test(str);
   }
 
-  getNumberWithSpaceSuffix(str: string): string | null {
+  getNumberWithSpaceSuffix (str: string): string | null {
     return (/\d\s+/.exec(str) as RegExpExecArray)[0];
   }
 
@@ -71,13 +71,13 @@ export class StringService implements StringImpl {
   reduceWhiteSpacesExceptLineBreaks (str: string): string {
     // the whitespace at the front is important
     return str.replace(
-      / +|[\f\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g,  
+      / +|[\f\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g,
       ' '
     );
   }
 
   // ABC v PP
-  getCaseName(str: string): string | null {
+  getCaseName (str: string): string | null {
     const caseNameRegex = /[a-z ]+v[a-z ]+(?!\[)/i;
     const matches = caseNameRegex.exec(str);
     if (matches == null) return null;
@@ -85,7 +85,7 @@ export class StringService implements StringImpl {
   }
 
   // [2021] SGHC 102
-  getCaseReferenceSuffix(str: string): string | null {
+  getCaseReferenceSuffix (str: string): string | null {
     const regex = /\[\d+\] .+\d/i;
     const matches = regex.exec(str);
     if (matches == null) return null;

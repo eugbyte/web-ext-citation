@@ -15,4 +15,3 @@ export function generateTemplate (copiedText: string, caseName: string | null, c
       return '';
   }
 }
-

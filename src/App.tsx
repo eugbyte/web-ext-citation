@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from './components/card';
 import { Dropdown } from './components/dropdown';
 import { ACTION, Action } from './models/Action';
@@ -12,7 +12,7 @@ colors[ACTION.PROVISION_ERROR] = "red-500";
 colors["DEFAULT"] = "blue-500";
 
 function App() {
-    const [action, setAction] = useState<Action>(new Action("DEFAULT", ""));
+    const [action, setAction] = useState<Action | null>(null);
     const [backgroundScriptService] = useState<BackgroundScriptImpl>(new BackgroundScriptService());
 
     const [option, setOption] = useState("");
@@ -20,19 +20,27 @@ function App() {
         setOption(event.target.value as string);
       };
 
-    // send action to content-script
-    backgroundScriptService
+      useEffect(() => {
+        backgroundScriptService
         .to("CONTENT-SCRIPT")
         .sendMessage(new Action(ACTION.PROVISION_STATUS, ""))
-        .then((response: Action) => {
+        .then((response: Action | null) => {
             setAction(response);
         });
+      });
+
+      useEffect(() => {
+        
+      }, [option]);
+
+    
+    // send action to content-script    
     
     return (
         <div style={{width: "300px"}} className="p-2">
             <Dropdown handleChange={handleChange} />
             <p className="font-semibold text-xs text text-blue-500 text-center">Legal Citer</p> 
-            { action.payload &&
+            { action?.payload &&
             <>
                 <p className={`font-bold text-xs 
                     text-${colors[action.type]}`}>
@@ -44,8 +52,7 @@ function App() {
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
             </>
-            }          
-            
+            }                      
                     
         </div>
     );
