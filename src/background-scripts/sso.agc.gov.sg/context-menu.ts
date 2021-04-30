@@ -1,15 +1,14 @@
 import { ACTION, Action } from 'src/models/Action';
 import { BackgroundScriptImpl } from 'src/services/background-script-service';
-import { ContextMenuImpl } from 'src/services/context-menu-service';
 
-export function initContentMenu (contextMenuService: ContextMenuImpl, backgroundScriptService: BackgroundScriptImpl) {
-  contextMenuService.createConextMenu({
+export function initContentMenu (backgroundScriptService: BackgroundScriptImpl) {
+  backgroundScriptService.createConextMenu({
     id: 'selection',
     title: 'Copy With Source',
     contexts: ['selection']
   });
 
-  contextMenuService.contextMenuOnClick((info) => {
+  backgroundScriptService.contextMenuOnClick((info) => {
     if (info.menuItemId !== 'selection') return;
     backgroundScriptService
       .to('CONTENT-SCRIPT')

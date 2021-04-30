@@ -1,3 +1,5 @@
+import { StringImpl } from 'src/services/string-service';
+
 // For some reason, for the first sub section, e.g. 14(1), 15(1), 15. ,
 // the copy event bubbles from the parent element instead of from the target element
 /* e.g. bubble from span instead of textNode, even though textNode was copied (crtl c)
@@ -7,9 +9,6 @@
     </span>
   */
 // That means the inner text will contain unwanted additional text from the table
-
-import { StringImpl } from 'src/services/string-service';
-
 // so, one way is to remove the \n(a) appear in the next sibling
 export function cleanUneededSiblingText (targetElement: HTMLElement, stringService: StringImpl): string {
   const innerText = targetElement.innerText;

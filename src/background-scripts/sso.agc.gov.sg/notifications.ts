@@ -6,9 +6,7 @@ export function notification (backgroundScriptService: BackgroundScriptImpl): vo
     .from("CONTENT-SCRIPT")
     .subscribe((action: Action) => {
       const payload: string = action.payload;
-      if (action.type === ACTION.NOTIFICATION_SUCCESS) {
-        backgroundScriptService.createBasicNotification('Provision Copied', payload);
-      } else if (action.type === ACTION.NOTIFICATION_WARNING) {
+      if (action.type === ACTION.NOTIFICATION_WARNING) {
         backgroundScriptService.createBasicNotification('Warning', payload);
       } else if (action.type === ACTION.NOTIFICATION_ERROR) {
         backgroundScriptService.createBasicNotification('Error', payload);

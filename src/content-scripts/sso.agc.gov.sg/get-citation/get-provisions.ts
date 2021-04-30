@@ -66,11 +66,11 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
     if (stringService.isBracketedAlpha(prevProv) && stringService.isBracketedNumber(text)) provResult.unshift(text);
 
     // e.g. (2), next prov should be 15
-    if (stringService.isBracketedNumber(prevProv) && stringService.isNumberWithOptionalAlpha(text)) provResult.unshift(text);
+    if (stringService.isBracketedNumber(prevProv) && stringService.isHyphenNumberWithOptionalAlpha(text)) provResult.unshift(text);
 
     // prevResult isNumber
     // Only the first component of the provision is a number, e.g. 15
-    const isFirstProvComponent: boolean = stringService.isNumberWithOptionalAlpha(prevProv);
+    const isFirstProvComponent: boolean = stringService.isHyphenNumberWithOptionalAlpha(prevProv);
     if (isFirstProvComponent) break;
   }
 

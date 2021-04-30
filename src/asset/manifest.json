@@ -14,6 +14,10 @@
       {
         "matches": ["https://sso.agc.gov.sg/*"],
         "js": ["content-scripts/sso.agc.gov.sg/index.js"]
+      },
+      {
+        "matches": ["https://www.lawnet.sg/lawnet/web/lawnet/free-resources*"],
+        "js": ["content-scripts/lawnet/index.js"]
       }
     ],
     "background": {
