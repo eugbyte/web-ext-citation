@@ -1,7 +1,7 @@
 import { DOMService } from 'src/services/dom-service';
 import { ProvisionImpl } from 'src/services/provision-service';
 import { StringImpl } from 'src/services/string-service';
-import { cleanUneededSiblingText, cleanText, removeUnwantedSourceSuffix } from './clean-text';
+import { cleanUneededSiblingText, cleanText, removeUnwantedDateSuffix } from './clean-text';
 import { getChapter } from './get-chapter';
 import { getProvisions } from './get-provisions';
 
@@ -59,12 +59,13 @@ export function getCitation (targetElement: HTMLElement, copiedText: string,
   // If the user copies a short text, this might result in repeated occurences when searching for said text in the parentFullText
   // Thus, combine the copied text with the sectionText, i.e., the text from the html element the copy event originated from
   let unionText = stringService.unionStrings(copiedText, sectionText) as string;
-  //unionText = removeUnwantedSourceSuffix(unionText, stringService);
+  unionText = removeUnwantedDateSuffix(unionText, stringService);
   console.log(`unionText: \n${JSON.stringify(unionText)}`);
+
+  console.log(fullText.includes(unionText));
 
   const provision: string = getProvisions(unionText, fullText, { stringService, provisionService });
   const chapter: string = getChapter({ stringService });
 
   return `${chapter} s ${provision}`;
 }
-

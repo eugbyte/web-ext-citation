@@ -10,7 +10,8 @@ interface ServicesImpl {
 
 export function getProvisions (sectionText: string, parentFullText: string, { stringService, provisionService }: ServicesImpl): string {
   // E.g. 15.—(1) or 15. or (a)
-  const regex = /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
+  // /\d+\w?\.—\(\d+\)|\d+\.|\n\(\w+\)/g;
+  const regex = /\n\d+\w?\.—\(\d+\)|\n\d+\.|\n\(\w+\)/g;
 
   const matches: RegExpMatchArray[] = stringService.findMatches(regex, parentFullText);
   let provisions: ProvisionComponent[] = matches.map(m => new ProvisionComponent(m.index ?? -1, m[0]));
@@ -80,6 +81,7 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
 
 function getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
   const occurences = parentFullText.split(childFullText).length;
+  console.log(`occurences: ${occurences}`)
   if (occurences > 2) {
     console.log('Unable to process more than one matches');
     Warning.sendNotification('Unable to process more than one matches');

@@ -11,7 +11,7 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   let err: Error | null = null;
   let contextMenuClicked: boolean = false;
 
-  const copyWithCitation = (event: ClipboardEvent) => {
+  document.addEventListener('copy', (event: ClipboardEvent) => {
     // only copy with citation when the user clicks the context menu
     if (!contextMenuClicked) return;
 
@@ -34,9 +34,7 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
 
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
     event.preventDefault();
-  };
-
-  document.addEventListener('copy', copyWithCitation);
+  });
 
   contentScriptService
     .from('BACKGROUND-SCRIPT')
