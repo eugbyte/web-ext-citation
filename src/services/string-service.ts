@@ -3,6 +3,7 @@ export interface StringImpl {
     isBracketedAlpha (str: string): boolean;
     isBracketedRoman (str: string): boolean;
     isBracketedNumber (str: string): boolean;
+    isNumberWithOptionalAlpha (str: string): boolean;
     isNumber (str: string): boolean;
     titleCase (str: string): string;
     removeLineBreaks(str: string): string;
@@ -31,6 +32,10 @@ export class StringService implements StringImpl {
   // E.g. (2)
   isBracketedNumber (str: string): boolean {
     return /\(-?\d+\)/.test(str);
+  }
+
+  isNumberWithOptionalAlpha (str: string): boolean {
+    return /^-?\d+\w?/.test(str);
   }
 
   isNumber (str: string): boolean {
