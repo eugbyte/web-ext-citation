@@ -1,13 +1,17 @@
 import { Action, ACTION } from 'src/models/Action';
+import { CITATION_OPTION, FORMAT } from 'src/models/util';
 import { ContentScriptImpl, ContentScriptService } from 'src/services/content-script-service';
 import { StringImpl, StringService } from 'src/services/string-service';
-import { FORMAT, generateTemplate } from './generate-template';
+import { generateTemplate } from './generate-template';
 import { getCitation } from './get-citation/get-citation';
 
 function main (stringService: StringImpl, contentScriptService: ContentScriptImpl) {
   let citation = '';
   const err: Error | null = null;
+
+  // State
   let contextMenuClicked: boolean = false;
+  let citationStyle: CITATION_OPTION = CITATION_OPTION.SAL;
 
   document.addEventListener('copy', (event: ClipboardEvent) => {
     // only copy with citation when the user clicks the context menu
@@ -22,11 +26,11 @@ function main (stringService: StringImpl, contentScriptService: ContentScriptImp
 
     (event.clipboardData as DataTransfer).setData(
       FORMAT.PLAIN_TEXT,
-      generateTemplate(copiedText as string, caseName, caseReferenceSuffix, paraNumber, FORMAT.PLAIN_TEXT)
+      generateTemplate(copiedText as string, caseName, caseReferenceSuffix, paraNumber, FORMAT.PLAIN_TEXT, citationStyle)
     );
     (event.clipboardData as DataTransfer).setData(
       FORMAT.HTML,
-      generateTemplate(copiedText as string, caseName, caseReferenceSuffix, paraNumber, FORMAT.HTML)
+      generateTemplate(copiedText as string, caseName, caseReferenceSuffix, paraNumber, FORMAT.HTML, citationStyle)
     );
 
     // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
@@ -48,10 +52,13 @@ function main (stringService: StringImpl, contentScriptService: ContentScriptImp
   contentScriptService
     .from('POPUP-SCRIPT')
     .subscribe((message: Action) => {
+      console.log(`citationStyle selected: ${message.payload}`);
+      citationStyle = (message.payload as CITATION_OPTION);
       if (message.type === ACTION.PROVISION_STATUS && citation.length > 0) {
         return Promise.resolve(new Action(ACTION.PROVISION_SUCCESS, citation));
       } else if (message.type === ACTION.PROVISION_STATUS && err != null) {
-        return Promise.resolve(new Action(ACTION.PROVISION_ERROR, err['message']));
+        let errorMessage: string = (err as Error).message;
+        return Promise.resolve(new Action(ACTION.PROVISION_ERROR, errorMessage));
       }
     });
 }

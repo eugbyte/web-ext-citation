@@ -28,7 +28,8 @@
       "notifications",
       "contextMenus",
       "clipboardRead",
-      "clipboardWrite"
+      "clipboardWrite",
+      "storage"
     ]
   }
   
