@@ -54,7 +54,6 @@ function App() {
 
     return (
         <div style={{width: "300px"}} className="p-2">
-            <p className="font-bold text-xs text text-blue-500 text-center">Legal Citation</p>             
             { action?.payload &&
             <>
                 <p className={`font-bold text-xs 
