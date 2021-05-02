@@ -1,9 +1,10 @@
 import { ACTION, Action } from 'src/models/Action';
 import { CITATION_OPTION } from 'src/models/util';
 import { BackgroundScriptImpl } from 'src/services/background-script-service';
+import { StorageImpl } from 'src/services/storage-service';
 import { browser } from 'webextension-polyfill-ts';
 
-export async function initContentMenu (backgroundScriptService: BackgroundScriptImpl) {
+export async function initContentMenu (backgroundScriptService: BackgroundScriptImpl, storageService: StorageImpl) {
   const CONTEXT_MENU_ID = 'selection';
 
   try {
@@ -20,9 +21,8 @@ export async function initContentMenu (backgroundScriptService: BackgroundScript
 
   backgroundScriptService.contextMenuOnClick(async (info) => {
     if (info.menuItemId !== CONTEXT_MENU_ID) return;
-    const storage = await browser.storage.local.get();
-    const citationOption: CITATION_OPTION = storage.citationOption ?? CITATION_OPTION.SAL;
-    const action = new Action(ACTION.CONTEXT_MENU_CLICKED, citationOption);
+    const citationOption: CITATION_OPTION = await storageService.getFromStorage('citationOption') ?? CITATION_OPTION.SAL;
+    const action: Action = new Action(ACTION.CONTEXT_MENU_CLICKED, citationOption);
     backgroundScriptService
       .to('CONTENT-SCRIPT')
       .sendMessage(action);

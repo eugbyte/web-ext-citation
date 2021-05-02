@@ -5,6 +5,7 @@ import { Dropdown } from './components/dropdown';
 import { ACTION, Action } from './models/Action';
 import { CITATION_OPTION } from './models/util';
 import { BackgroundScriptImpl, BackgroundScriptService } from './services/background-script-service';
+import { StorageImpl, StorageService } from './services/storage-service';
 import './styles/styles.css';
 
 const colors: Record<string, string> = {};
@@ -16,6 +17,7 @@ colors["DEFAULT"] = "blue-500";
 function App() {
     const [action, setAction] = useState<Action | null>(null);
     const [backgroundScriptService] = useState<BackgroundScriptImpl>(new BackgroundScriptService());
+    const [storageService] = useState<StorageImpl>(new StorageService());
 
     const [citationOption, setCitationOption] = useState<CITATION_OPTION | null>(null);
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -31,8 +33,7 @@ function App() {
 
     useEffect(() => {
         const sync = async () => {
-            const storage = await browser.storage.local.get();
-            let storageCitationOption: CITATION_OPTION | null = storage["citationOption"];
+            let storageCitationOption = await storageService.getFromStorage("citationOption") as CITATION_OPTION | null;
             if (storageCitationOption == null) {
                 setCitationOption(CITATION_OPTION.SAL);
             } else {
@@ -46,7 +47,7 @@ function App() {
     useEffect(() => {
         if (citationOption == null) return;
         const sync = async () => {
-            await browser.storage.local.set({citationOption});   
+            await storageService.setStorage({citationOption});
             await sendMessageToContentScript();
         }
         sync();
