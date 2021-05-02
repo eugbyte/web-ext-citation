@@ -11,7 +11,7 @@ export function Dropdown({handleChange, defaultValue}: Prop): JSX.Element {
 
   return <div className="w-full">
     <label htmlFor="dropdown" className="text-xs font-bold block">Format:</label>
-    <select className={`${styles.dropDown} text-xs border shadow-md`} 
+    <select className={`${styles.dropdown} text-xs border shadow-md`} 
       onChange={handleChange} 
       defaultValue={defaultValue}
       id="dropdown">

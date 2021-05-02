@@ -33,7 +33,18 @@ module.exports = {
         test: /\.css$/i,
         sideEffects: true,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
-      }
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'images/[hash]-[name].[ext]',
+            },
+          },
+        ],
+      },
     ]
   },
   resolve: {

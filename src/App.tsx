@@ -61,14 +61,13 @@ function App() {
                     Most recent:
                 </p>
                 <Card className={`items-start 
-                    p-1 
+                    p-1 mb-2
                     bg-${colors[action.type]}`}>
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
-                <hr className="divide-y-4 divide-black divide-opacity-25"/>
             </>
             }  
-            <div className="flex flex-row mt-2">
+            <div className="flex flex-row">
             { citationOption &&
                 <Dropdown handleChange={handleChange} defaultValue={citationOption}/>
             }  
