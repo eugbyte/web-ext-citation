@@ -6,7 +6,6 @@ export function generateTemplate (copiedText: string,
   paraNumber: string | null,
   format: FORMAT,
   citationStyle: CITATION_OPTION): string {
-
   if (format === FORMAT.PLAIN_TEXT) {
     return `${copiedText}\n${caseName} ${caseReferenceSuffix} at [${paraNumber}]`;
   }
@@ -23,6 +22,5 @@ export function generateTemplate (copiedText: string,
         <span><i>${caseName}</i> ${caseReferenceSuffix} at [${paraNumber}]</span>`;
   }
 
-  throw new Error("unhandled format or citationStyle");
-  
+  throw new Error('unhandled format or citationStyle');
 }

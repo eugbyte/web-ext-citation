@@ -4,10 +4,10 @@ import { BackgroundScriptImpl } from 'src/services/background-script-service';
 import { browser } from 'webextension-polyfill-ts';
 
 export async function initContentMenu (backgroundScriptService: BackgroundScriptImpl) {
-  const CONTEXT_MENU_ID = "selection";
+  const CONTEXT_MENU_ID = 'selection';
   const storage = await browser.storage.local.get();
 
-  // await browser.contextMenus.remove(CONTEXT_MENU_ID);
+  await browser.contextMenus.remove(CONTEXT_MENU_ID);
 
   backgroundScriptService.createConextMenu({
     id: CONTEXT_MENU_ID,
@@ -17,7 +17,7 @@ export async function initContentMenu (backgroundScriptService: BackgroundScript
 
   backgroundScriptService.contextMenuOnClick((info) => {
     if (info.menuItemId !== 'selection') return;
-    let citationOption: CITATION_OPTION =  storage["citationOption"] ??  CITATION_OPTION.SAL;
+    const citationOption: CITATION_OPTION = storage.citationOption ?? CITATION_OPTION.SAL;
     const action = new Action(ACTION.CONTEXT_MENU_CLICKED, citationOption);
     backgroundScriptService
       .to('CONTENT-SCRIPT')

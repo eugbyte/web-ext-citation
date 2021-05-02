@@ -43,7 +43,7 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   contentScriptService
     .from('BACKGROUND-SCRIPT')
     .subscribe((message: Action) => {
-      console.log({message});
+      console.log({ message });
       if (message.type === ACTION.CONTEXT_MENU_CLICKED) {
         // modify the state so that copyWithCitation(), which depends on this state, can execute
         contextMenuClicked = true;
