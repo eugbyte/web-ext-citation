@@ -65,11 +65,15 @@ function App() {
                     bg-${colors[action.type]}`}>
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
+                <hr className="divide-y-4 divide-black divide-opacity-25"/>
             </>
             }  
+            <div className="flex flex-row mt-2">
             { citationOption &&
                 <Dropdown handleChange={handleChange} defaultValue={citationOption}/>
-            }                    
+            }  
+            </div>
+                              
                     
         </div>
     );

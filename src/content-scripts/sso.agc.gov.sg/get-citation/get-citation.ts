@@ -54,7 +54,7 @@ export function getCitation (targetElement: HTMLElement, copiedText: string,
   console.log(`sectionText: \n${JSON.stringify(sectionText)}`);
   console.log(`copiedText: \n${JSON.stringify(copiedText)}`);
 
-  console.log(sectionText.includes(copiedText));
+  //console.log(sectionText.includes(copiedText));
 
   // If the user copies a short text, this might result in repeated occurences when searching for said text in the parentFullText
   // Thus, combine the copied text with the sectionText, i.e., the text from the html element the copy event originated from

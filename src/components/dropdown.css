@@ -1,0 +1,8 @@
+/* To replace the default <select> arrow */
+.dropwDown {
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position-x: 98%;
+    background-position-y: 50%;
+    background-color: red;
+  }

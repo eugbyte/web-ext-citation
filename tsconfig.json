@@ -16,6 +16,7 @@
     // "outFile": "./",                       /* Concatenate and emit output to single file. */
     "outDir": "./build",                        /* Redirect output structure to the directory. */
     "baseUrl": "./",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
 
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
