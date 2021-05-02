@@ -81,7 +81,7 @@ export function getProvisions (sectionText: string, parentFullText: string, { st
 
 function getStartIndexOfCopiedText (childFullText: string, parentFullText: string): number {
   const occurences = parentFullText.split(childFullText).length;
-  console.log("occurences", parentFullText.split(childFullText));
+  console.log('occurences', parentFullText.split(childFullText));
   console.log(`occurences: ${occurences}`);
   if (occurences > 2) {
     console.log('Unable to process more than one matches');
