@@ -21,7 +21,7 @@
       }
     ],
     "background": {
-      "scripts": ["background-scripts/sso.agc.gov.sg/index.js"]
+      "scripts": ["background-scripts/index.js"]
     },
     "permissions": [
       "activeTab",

@@ -11,11 +11,11 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   let provision = '';
   let err: Error | null = null;
 
-  // Statess
+  // States
   let contextMenuClicked: boolean = false;
   let citationStyle: CITATION_OPTION = CITATION_OPTION.SAL;
 
-  document.addEventListener('copy', (event: ClipboardEvent) => {
+  document.addEventListener('copy', async (event: ClipboardEvent) => {
     // only copy with citation when the user clicks the context menu
     if (!contextMenuClicked) return;
 
@@ -24,7 +24,7 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
 
     try {
       provision = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
-      console.log(`${provision}`);
+      console.log(`provision: ${provision}`);
     } catch (error) {
       err = error;
       contentScriptService
@@ -43,9 +43,11 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   contentScriptService
     .from('BACKGROUND-SCRIPT')
     .subscribe((message: Action) => {
+      console.log({message});
       if (message.type === ACTION.CONTEXT_MENU_CLICKED) {
         // modify the state so that copyWithCitation(), which depends on this state, can execute
         contextMenuClicked = true;
+        citationStyle = (message.payload as CITATION_OPTION);
         console.log('console-menu clicked');
         document.execCommand('copy');
         contextMenuClicked = false;
@@ -58,8 +60,6 @@ function main (stringService: StringImpl, domService: DOMImpl, provisionService:
   contentScriptService
     .from('POPUP-SCRIPT')
     .subscribe((message: Action) => {
-      console.log(`citationStyle selected: ${message.payload}`);
-      citationStyle = (message.payload as CITATION_OPTION);
       if (message.type === ACTION.PROVISION_STATUS && provision.length > 0) {
         return Promise.resolve(new Action(ACTION.PROVISION_SUCCESS, provision));
       } else if (message.type === ACTION.PROVISION_STATUS && err != null) {

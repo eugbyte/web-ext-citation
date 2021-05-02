@@ -43,6 +43,7 @@ function main (stringService: StringImpl, contentScriptService: ContentScriptImp
       if (message.type === ACTION.CONTEXT_MENU_CLICKED) {
         // modify the state so that copyWithCitation(), which depends on this state, can execute
         contextMenuClicked = true;
+        citationStyle = (message.payload as CITATION_OPTION);
         console.log('console-menu clicked');
         document.execCommand('copy');
         contextMenuClicked = false;
@@ -57,7 +58,7 @@ function main (stringService: StringImpl, contentScriptService: ContentScriptImp
       if (message.type === ACTION.PROVISION_STATUS && citation.length > 0) {
         return Promise.resolve(new Action(ACTION.PROVISION_SUCCESS, citation));
       } else if (message.type === ACTION.PROVISION_STATUS && err != null) {
-        let errorMessage: string = (err as Error).message;
+        const errorMessage: string = (err as Error).message;
         return Promise.resolve(new Action(ACTION.PROVISION_ERROR, errorMessage));
       }
     });
