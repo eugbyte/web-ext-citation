@@ -35,12 +35,12 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.svg$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: 'svg-url-loader',
             options: {
-              name: 'images/[hash]-[name].[ext]',
+              limit: 10000,
             },
           },
         ],

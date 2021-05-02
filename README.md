@@ -42,4 +42,5 @@ Communication of data is between:
 1.  content-script - background-script (https://developer.chrome.com/docs/extensions/mv3/messaging/)
 2.  content-script - popup-script (https://stackoverflow.com/a/31112456/6514532) 
 
-  
+# Licenses
+https://fontawesome.com/v4.7.0/license/

@@ -1,7 +1,7 @@
-.dropdown {
+.dropDown {
   appearance: none;
   background-repeat: no-repeat;
   background-position-x: 98%;
   background-position-y: 50%;
-  background-image: url("../asset/icons/chevron-circle-down-solid.svg");
+  background-image: url("../asset/icons/chevron.svg");
 }
