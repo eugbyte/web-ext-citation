@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { browser, Storage } from 'webextension-polyfill-ts';
 import { Card } from './components/card';
 import { Dropdown } from './components/dropdown';
 import { ACTION, Action } from './models/Action';
@@ -66,6 +65,8 @@ function App() {
                     bg-${colors[action.type]}`}>
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
+
+                <hr className="border-1 my-4"/>
             </>
             }  
             <div className="flex flex-row">

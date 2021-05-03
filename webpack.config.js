@@ -15,7 +15,10 @@ module.exports = {
     'background-scripts/index': './src/background-scripts/index.ts',
     // lawnet
     'content-scripts/lawnet/index': './src/content-scripts/lawnet/index.ts',
-    'index': './src/index.tsx'
+    'index': './src/index.tsx',
+    // polyfill
+    'browser-polyfill': './node_modules/webextension-polyfill/dist/browser-polyfill.js'
+
   },
   output: {
     filename: '[name].js',

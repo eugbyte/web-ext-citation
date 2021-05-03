@@ -5,19 +5,19 @@
     "browser_action": {
       "default_popup": "index.html",
       "default_title": "Open the popup",
-      "default_icon": "icons/favicon.ico"
+      "default_icon": "icons/scroll.svg"
     },
     "icons": {
-      "16": "icons/favicon.ico"
+      "48": "icons/scroll.svg"
     },
     "content_scripts": [
       {
         "matches": ["https://sso.agc.gov.sg/*"],
-        "js": ["content-scripts/sso.agc.gov.sg/index.js"]
+        "js": ["browser-polyfill.js", "content-scripts/sso.agc.gov.sg/index.js"]
       },
       {
-        "matches": ["https://www.lawnet.sg/lawnet/web/lawnet/free-resources*"],
-        "js": ["content-scripts/lawnet/index.js"]
+        "matches": ["https://www.lawnet.sg/*"],
+        "js": ["browser-polyfill.js", "content-scripts/lawnet/index.js"]
       }
     ],
     "background": {
