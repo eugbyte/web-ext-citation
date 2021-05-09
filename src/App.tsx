@@ -7,11 +7,20 @@ import { BackgroundScriptImpl, BackgroundScriptService } from './services/backgr
 import { StorageImpl, StorageService } from './services/storage-service';
 import './styles/styles.css';
 
-const colors: Record<string, string> = {};
-colors[ACTION.PROVISION_SUCCESS] = "green-500";
-colors[ACTION.NOTIFICATION_WARNING] = "yellow-500";
-colors[ACTION.PROVISION_ERROR] = "red-500";
-colors["DEFAULT"] = "blue-500";
+// have to separate textsColors and background colors so that it is easier durring css minification
+// https://tailwindcss.com/docs/optimizing-for-production
+const backgroundColors: Record<string, string> = {};
+backgroundColors[ACTION.PROVISION_SUCCESS] = "bg-green-500";
+backgroundColors[ACTION.NOTIFICATION_WARNING] = "bg-yellow-500";
+backgroundColors[ACTION.PROVISION_ERROR] = "bg-red-500";
+backgroundColors["DEFAULT"] = "bg-blue-500";
+
+const textColors: Record<string, string> = {};
+textColors[ACTION.PROVISION_SUCCESS] = "text-green-500";
+textColors[ACTION.NOTIFICATION_WARNING] = "text-yellow-500";
+textColors[ACTION.PROVISION_ERROR] = "text-red-500";
+textColors["DEFAULT"] = "text-blue-500";
+
 
 function App() {
     const [action, setAction] = useState<Action | null>(null);
@@ -57,12 +66,12 @@ function App() {
             { action?.payload &&
             <>
                 <p className={`font-bold text-xs 
-                    text-${colors[action.type]}`}>
+                    ${textColors[action.type]}`}>
                     Most recent:
                 </p>
                 <Card className={`items-start 
                     p-1 mb-2
-                    bg-${colors[action.type]}`}>
+                    ${backgroundColors[action.type]}`}>
                     <p className="text-white text-xs font-semibold">{action?.payload}</p>
                 </Card>    
 

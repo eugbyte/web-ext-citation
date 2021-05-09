@@ -3,9 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require("terser-webpack-plugin");
+
+const stage = "development"
 
 module.exports = {
-  mode: 'development',
+  mode: stage,
   watchOptions: {
     ignored: /node_modules/,
   },
@@ -53,6 +56,10 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     plugins: [new TsconfigPathsPlugin()]
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   plugins: [
     new MiniCssExtractPlugin({

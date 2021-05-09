@@ -18,5 +18,11 @@ export function generateTemplate (copiedText: string, citation: string, format: 
         <span>${citation}</span>`;
   }
 
+  if (format === FORMAT.HTML && citationStyle === CITATION_OPTION.SAL_VSTO) {
+    return `${copiedText}
+      __FOOTNOTE__${citation}__/FOOTNOTE__
+    `;      
+  }
+
   throw new Error('unhandled format or citationStyle');
 }
