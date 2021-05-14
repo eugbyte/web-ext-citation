@@ -12,7 +12,7 @@ In one terminal, run
 `npm run dev`
 
 In another terminal, after webpack has completed building, in the first terminal, run  
-`npm start`  
+`npm start:firefox`  
 
 Visit the websites, e.g. https://sso.agc.gov.sg/Act/PDPA2012   
 Select the text, right click, and on the context menu, select "copy with source"
