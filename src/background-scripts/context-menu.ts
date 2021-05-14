@@ -13,7 +13,7 @@ export async function initContentMenu (backgroundScriptService: BackgroundScript
     console.log({ error });
   }
 
-  backgroundScriptService.createConextMenu({
+  backgroundScriptService.createContextMenu({
     id: CONTEXT_MENU_ID,
     title: 'Copy With Source',
     contexts: ['selection']

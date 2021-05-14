@@ -36,7 +36,7 @@ import { CITATION_OPTION, FORMAT } from 'src/models/util';
 
       (event.clipboardData as DataTransfer).setData(FORMAT.PLAIN_TEXT, generateTemplate(copiedText as string, provision, FORMAT.PLAIN_TEXT, citationStyle));
       (event.clipboardData as DataTransfer).setData(FORMAT.HTML, generateTemplate(copiedText as string, provision, FORMAT.HTML, citationStyle));
-      //(event.clipboardData as DataTransfer).setData('application/xml', `<footer></footer>`);
+      // (event.clipboardData as DataTransfer).setData('application/xml', `<footer></footer>`);
 
       // You need to prevent the default action in the event handler to prevent your changes from being overwritten by the browser:
       event.preventDefault();

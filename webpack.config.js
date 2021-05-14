@@ -13,15 +13,14 @@ module.exports = {
     ignored: /node_modules/,
   },
   entry: {
+    // polyfill
+    'browser-polyfill': './node_modules/webextension-polyfill/dist/browser-polyfill.js',
     // sso.agc.gov.sg
     'content-scripts/sso.agc.gov.sg/index': './src/content-scripts/sso.agc.gov.sg/index.ts',
     'background-scripts/index': './src/background-scripts/index.ts',
     // lawnet
     'content-scripts/lawnet/index': './src/content-scripts/lawnet/index.ts',
-    'index': './src/index.tsx',
-    // polyfill
-    'browser-polyfill': './node_modules/webextension-polyfill/dist/browser-polyfill.js'
-
+    'index': './src/index.tsx',        
   },
   output: {
     filename: '[name].js',

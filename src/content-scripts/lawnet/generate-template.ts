@@ -22,5 +22,9 @@ export function generateTemplate (copiedText: string,
         <span><i>${caseName}</i> ${caseReferenceSuffix} at [${paraNumber}]</span>`;
   }
 
+  if (format === FORMAT.HTML && citationStyle === CITATION_OPTION.SAL_VSTO) {
+    return `${copiedText} __FOOTNOTE__${caseName}</i> ${caseReferenceSuffix} at [${paraNumber}]__/FOOTNOTE__`;
+  }
+
   throw new Error('unhandled format or citationStyle');
 }

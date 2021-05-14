@@ -66,6 +66,8 @@ import { getCitation } from './get-citation/get-citation';
       });
   }
 
+  console.log('Hello World');
+
   // Dependency Injection
   main(new StringService(), new ContentScriptService());
 })();

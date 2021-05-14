@@ -48,7 +48,7 @@ export class StringService implements StringImpl {
   }
 
   getNumberWithSpaceSuffix (str: string): string | null {
-    return (/\d\s+/.exec(str) as RegExpExecArray)[0];
+    return (/\d+\s+/.exec(str) as RegExpExecArray)[0];
   }
 
   titleCase (str: string): string {

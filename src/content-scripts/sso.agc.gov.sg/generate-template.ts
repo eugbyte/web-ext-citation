@@ -2,6 +2,7 @@ import { CITATION_OPTION, FORMAT } from 'src/models/util';
 
 export function generateTemplate (copiedText: string, citation: string, format: FORMAT, citationStyle: CITATION_OPTION): string {
   console.log({ copiedText, citation, format, citationStyle });
+
   if (format === FORMAT.PLAIN_TEXT) {
     return `${copiedText}\n${citation}`;
   }
@@ -19,9 +20,7 @@ export function generateTemplate (copiedText: string, citation: string, format: 
   }
 
   if (format === FORMAT.HTML && citationStyle === CITATION_OPTION.SAL_VSTO) {
-    return `${copiedText}
-      __FOOTNOTE__${citation}__/FOOTNOTE__
-    `;      
+    return `${copiedText}__FOOTNOTE__${citation}__/FOOTNOTE__`;
   }
 
   throw new Error('unhandled format or citationStyle');

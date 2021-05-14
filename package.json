@@ -9,7 +9,8 @@
     "lint:fix": "npm run lint -- --fix",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "webpack watch",
-    "start": "web-ext --source-dir build run",
+    "start:firefox": "web-ext --source-dir build run  -t firefox-desktop",
+    "start:chrome": "web-ext --source-dir build run  -t chromium",
     "type-check": "tsc --noEmit"
   },
   "author": "",
@@ -43,6 +44,7 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
+    "@types/chrome": "0.0.139",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "lodash.clonedeep": "^4.5.0",
