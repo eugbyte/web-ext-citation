@@ -28,7 +28,7 @@ import { CITATION_OPTION, FORMAT } from 'src/models/util';
         provision = getCitation(targetElement, copiedText as string, { stringService, domService, provisionService });
         console.log(`provision: ${provision}`);
       } catch (error) {
-        err = error;
+        err = error as Error;
         contentScriptService
           .to('BACKGROUND-SCRIPT')
           .sendMessage(new Action(ACTION.NOTIFICATION_ERROR, 'An Error Occured'));
