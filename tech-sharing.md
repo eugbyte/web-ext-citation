@@ -2,8 +2,7 @@
 
 ## About
 This web extension auto generates citations, when the user copies the text from the following Singapore academic websites.
-1. https://sso.agc.gov.sg (statutes)
-2. https://www.lawnet.sg/lawnet/web/lawnet/free-resources (judgements)
+1. https://www.lawnet.sg/lawnet/web/lawnet/free-resources (judgements)
 
 ## Why I created this extension
 As a student, cumbersome to keep track of citation
